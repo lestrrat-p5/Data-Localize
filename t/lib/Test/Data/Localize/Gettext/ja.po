@@ -1,0 +1,2 @@
+msgid "Hello, stranger!"
+msgstr "%1さん、こんにちは!"

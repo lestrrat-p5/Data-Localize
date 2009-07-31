@@ -1,0 +1,42 @@
+Changes
+=======
+
+0.00007 15 Apr 2009
+  * Properly handle BerkeleyDB dependency (it's not required)
+
+0.00006 14 Apr 2009
+  * Properly cleanse $lang before using it as a namespace
+
+0.00006_01 25 Mar 2009
+  * Add a storage backend. This is mainly to cover cases where storing
+    many lexicons on memory is not a practical choice
+  * API change: lexicon_get() now accepts 2 arguments, and expects
+    the translated lexicon back
+
+0.00005 09 Mar 2009
+  * Any::Moose me! Requires MouseX::AttributeHandlers and Mouse 0.19
+
+0.00004 04 Mar 2009
+  * Silence a minor warning
+  * Fix up POD tests
+
+0.00003 25 Feb 2009
+  * format_string() was not properly formatting for cases where the argument
+    was a logical false, such as 0. This has been fixed, but note that undef
+    will not show up on the formatted string.
+
+0.00002 22 Feb 2009
+  * Change the eval call, to see if we can trap failures like this
+    http://www.nntp.perl.org/group/perl.cpan.testers/2009/02/msg3321095.html
+  * Remove Data::Dumper from debug output
+  * Clear %ENV so that I18N::LangTags doesn't pick up the system language
+
+0.00001 20 Feb 2009
+  * Add find_localizers()
+
+0.00001_02 20 Feb 2009
+  * Handle 'localizers' in the constructor
+  * Add (stole) metadata parsing for Gettext
+
+0.00001_01 15 Feb 2009
+  * Initial release
