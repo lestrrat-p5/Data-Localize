@@ -19,7 +19,7 @@ BEGIN {
 }
 
 has auto => (
-    is => 'ro',
+    is => 'rw',
     isa => 'Bool',
     default => 1,
 );
