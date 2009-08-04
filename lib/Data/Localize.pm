@@ -1,5 +1,3 @@
-# $Id: Localize.pm 32433 2009-04-15 01:36:27Z daisuke $
-
 package Data::Localize;
 use Any::Moose;
 use Any::Moose '::Util::TypeConstraints';
@@ -7,7 +5,7 @@ use Any::Moose 'X::AttributeHelpers';
 use I18N::LangTags ();
 use I18N::LangTags::Detect ();
 
-our $VERSION = '0.00007';
+our $VERSION = '0.00008';
 our $AUTHORITY = 'cpan:DMAKI';
 
 BEGIN {
