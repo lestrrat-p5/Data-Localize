@@ -30,7 +30,6 @@ sub format_string {
     my ($self, $value, @args) = @_;
 
     my $style = $self->style;
-print STDERR "$self -> localizing '$value' with (@args), style is $style\n" if Data::Localize::DEBUG();
     if ($style eq 'gettext') {
         $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
     } elsif ($style eq 'maketext') {
