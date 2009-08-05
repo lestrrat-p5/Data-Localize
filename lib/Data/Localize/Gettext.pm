@@ -107,10 +107,10 @@ sub load_from_file {
     my (%var, $key, @comments, @ret, @metadata);
 my $UseFuzzy = 0;
 my $KeepFuzzy = 0;
-my $AllowEmpty = 1;
+my $AllowEmpty = 0;
 my @fuzzy;
     my $process    = sub {
-        if ( length( $var{msgstr} ) and ( $UseFuzzy or !$var{fuzzy} ) ) {
+        if ( length( $var{msgid} ) and length( $var{msgstr} ) and ( $UseFuzzy or !$var{fuzzy} ) ) {
             $lexicon{ $var{msgid} } = $var{msgstr};
         }
         elsif ($AllowEmpty) {
