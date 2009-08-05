@@ -1,8 +1,11 @@
 Changes
 =======
 
+0.00008 05 Aug 2009
+  * Do not allow spurfulous entries in the lexicon hash for gettext
+
 0.00008 04 Aug 2009
-  * add auto_style to determine the auto-fallback style
+  * Add auto_style to determine the auto-fallback style
 
 0.00007 15 Apr 2009
   * Properly handle BerkeleyDB dependency (it's not required)
