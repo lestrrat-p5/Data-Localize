@@ -5,7 +5,7 @@ use Any::Moose 'X::AttributeHelpers';
 use I18N::LangTags ();
 use I18N::LangTags::Detect ();
 
-our $VERSION = '0.00009';
+our $VERSION = '0.00010';
 our $AUTHORITY = 'cpan:DMAKI';
 
 BEGIN {

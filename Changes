@@ -1,7 +1,12 @@
 Changes
 =======
 
-0.00008 05 Aug 2009
+0.00010 17 Aug 2009
+  * Allow method calls to be made for Gettext formats. For example,
+    %foo(1,2,3) will call $localizer->foo(undef, ['1', '2', '3']), and use
+    its return value as the localized text
+
+0.00009 05 Aug 2009
   * Do not allow spurfulous entries in the lexicon hash for gettext
 
 0.00008 04 Aug 2009
