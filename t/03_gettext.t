@@ -3,7 +3,7 @@ use lib "t/lib";
 use utf8;
 use File::Spec;
 use File::Temp qw(tempdir);
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Test::Data::Localize;
 
 use_ok "Data::Localize";
@@ -78,4 +78,25 @@ EOM
     $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、おじゃまんぼう！');
 
+}
+
+{
+    my $class = Data::Localize::Gettext->meta->create_anon_class(
+        superclasses => [ 'Data::Localize::Gettext' ],
+        methods      => {
+            test => sub {
+                my ($self, $args, $embedded) = @_;
+                return join(':', @$args, @$embedded);
+            }
+        }
+    );
+    my $loc = $class->name->new(
+        path => 't/lib/Test/Data/Localize/Gettext/*.po'
+    );
+    my $out = $loc->localize_for(
+        lang => 'ja',
+        id   => 'Dynamically Create Me!',
+        args => [ '牧大輔' ],
+    );
+    is($out, '牧大輔:a:b:cを動的に作成したぜ!');
 }

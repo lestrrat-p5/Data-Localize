@@ -1,4 +1,3 @@
-# $Id: Gettext.pm 31909 2009-04-04 17:50:24Z daisuke $
 
 package Data::Localize::Gettext;
 use utf8;
@@ -180,6 +179,27 @@ my @fuzzy;
 
     # This needs to be merged
     $self->lexicon_merge($lang, \%lexicon);
+}
+
+sub format_string {
+    my ($self, $value, @args) = @_;
+    $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
+    $value =~ s/%(\w+)\(([^\)]+)\)/
+        $self->_method( $1, $2, \@args )
+    /gex;
+
+    return $value;
+}
+
+sub _method {
+    my ($self, $method, $embedded, $args) = @_;
+
+    my @embedded_args = split /,/, $embedded;
+    my $code = $self->can($method);
+    if (! $code) {
+        confess(blessed $self . " does not implement method $method");
+    }
+    return $code->($self, $args, \@embedded_args );
 }
 
 sub lexicon_get {
