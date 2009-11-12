@@ -115,7 +115,7 @@ my @fuzzy;
         elsif ($AllowEmpty) {
             $lexicon{ $var{msgid} } = '';
         }
-        if ( $var{msgid} eq '' ) {
+        if ( defined $var{msgid} && $var{msgid} eq '' ) {
             push @metadata, $self->parse_metadata( $var{msgstr} );
         }
         else {
