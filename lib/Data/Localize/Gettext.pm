@@ -87,7 +87,9 @@ sub load_from_path {
 
     return unless $path;
 
-    print STDERR "[Data::Localize::Gettext]: load_from_path - loading from glob($path)\n" if &Data::Localize::DEBUG;
+    if (Data::Localize::DEBUG()) {
+        print STDERR "[Data::Localize::Gettext]: load_from_path - loading from glob($path)\n" 
+    }
 
     foreach my $x (glob($path)) {
         $self->load_from_file($x) if -f $x;
@@ -97,7 +99,10 @@ sub load_from_path {
 sub load_from_file {
     my ($self, $file) = @_;
 
-    print STDERR "[Data::Localize::Gettext]: load_from_file - loading from file $file\n" if &Data::Localize::DEBUG;
+    if (Data::Localize::DEBUG()) {
+        print STDERR "[Data::Localize::Gettext]: load_from_file - loading from file $file\n"
+    }
+
     my %lexicon;
     open(my $fh, '<', $file) or die "Could not open $file: $!";
 
@@ -174,8 +179,10 @@ my @fuzzy;
     my $lang = File::Basename::basename($file);
     $lang =~ s/\.[mp]o$//;
 
-    print STDERR "[Data::Localize::Gettext]: load_from_file - registering ",
-        scalar keys %lexicon, " keys\n" if &Data::Localize::DEBUG;
+    if (Data::Localize::DEBUG()) {
+        print STDERR "[Data::Localize::Gettext]: load_from_file - registering ",
+            scalar keys %lexicon, " keys\n"
+    }
 
     # This needs to be merged
     $self->lexicon_merge($lang, \%lexicon);

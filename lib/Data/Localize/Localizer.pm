@@ -18,7 +18,7 @@ sub localize_for {
     my ($lang, $id, $args) = @args{ qw(lang id args) };
 
     my $value = $self->lexicon_get($lang, $id) or return ();
-    if (&Data::Localize::DEBUG) {
+    if (Data::Localize::DEBUG()) {
         print STDERR "[Data::Localize::Localizer]: localize_for - $id -> ",
             defined($value) ? $value : '(null)', "\n";
     }

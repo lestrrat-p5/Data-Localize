@@ -18,7 +18,7 @@ sub localize_for {
     my ($id, $args) = @args{ qw(id args) };
 
     my $value = $id;
-    if (&Data::Localize::DEBUG) {
+    if (Data::Localize::DEBUG()) {
         print STDERR "[Data::Localize::Auto]: localize_for - $id -> ",
             defined($value) ? $value : '(null)', "\n";
     }

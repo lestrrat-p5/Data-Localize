@@ -145,7 +145,7 @@ sub detect_languages {
         I18N::LangTags::Detect::detect() ||
         $self->fallback_languages,
     );
-    if (&DEBUG) {
+    if (DEBUG()) {
         print STDERR "[Data::Localize]: detect_languages auto-detected ", join(", ", map { "'$_'" } @lang ), "\n";
     }
     return wantarray ? @lang : \@lang;
@@ -157,7 +157,7 @@ sub detect_languages_from_header {
         I18N::LangTags::Detect->http_accept_langs( $_[0] || $ENV{HTTP_ACCEPT_LANGUAGE}),
         $self->fallback_languages,
     );
-    if (&DEBUG) {
+    if (DEBUG()) {
         print STDERR "[Data::Localize]: detect_languages_from_header detected ", join(", ", map { "'$_'" } @lang ), "\n";
     }
     return wantarray ? @lang : \@lang;
@@ -189,7 +189,7 @@ sub localize {
     # one last shot. try the '*' slot
     foreach my $localizer (@{$self->get_localizer_from_lang('*') || []}) {
         foreach my $lang ($self->languages) {
-            if (DEBUG) {
+            if (DEBUG()) {
                 print STDERR "[Data::Localize]: localize - trying $lang for '*' with localizer $localizer\n" if DEBUG;
             }
             my $out = $localizer->localize_for(
@@ -210,7 +210,7 @@ sub localize {
     # if you got here, and you /still/ can't find a proper localization,
     # then we fallback to 'auto' feature
     if ($self->auto) {
-        if (DEBUG) {
+        if (DEBUG()) {
             print STDERR "[Data::Localize]: localize - trying auto-lexicon for $key\n";
         }
         return $self->auto_localizer->localize_for(id => $key, args => \@args);
@@ -251,7 +251,7 @@ sub find_localizers {
 sub add_localizer_map {
     my ($self, $lang, $localizer) = @_;
 
-    if (DEBUG) {
+    if (DEBUG()) {
         print STDERR "[Data::Localize]: add_localizer_map $lang -> $localizer\n";
     }
     my $list = $self->get_localizer_from_lang($lang);
