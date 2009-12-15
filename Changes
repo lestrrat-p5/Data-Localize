@@ -1,10 +1,14 @@
 Changes
 =======
 
+0.00011 15 Dec 2009
+  * Don't attempt to load Namespace lexicons once we failed to load them.
+  * Allow method calls for Maketext formats (UNTESTED -- will do more hacking)
+
 0.00010 17 Aug 2009
   * Allow method calls to be made for Gettext formats. For example,
     %foo(1,2,3) will call $localizer->foo(undef, ['1', '2', '3']), and use
-    its return value as the localized text
+    its return value as the localized text (UNTESTED -- will do more hacking)
 
 0.00009 05 Aug 2009
   * Do not allow spurfulous entries in the lexicon hash for gettext
