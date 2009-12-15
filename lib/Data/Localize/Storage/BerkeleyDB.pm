@@ -1,9 +1,8 @@
 package Data::Localize::Storage::BerkeleyDB;
 use Any::Moose;
+use BerkeleyDB;
 
 with 'Data::Localize::Storage';
-
-use BerkeleyDB;
 
 has 'db' => (
     is => 'rw',
