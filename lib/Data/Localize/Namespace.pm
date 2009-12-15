@@ -40,12 +40,22 @@ sub register {
 }
 
 our %LOADED;
+our %ATTEMPTED;
 sub lexicon_get {
     my ($self, $lang, $id) = @_;
 
     $lang =~ s/-/_/g;
+
     foreach my $namespace ($self->namespaces) {
         my $klass = "$namespace\::$lang";
+
+        if ($ATTEMPTED{ $klass }++) {
+            if (Data::Localize::DEBUG()) {
+                print STDERR "[Data::Localize::Namespace]: lexicon_get - Already attempted loading $klass and failed. Skipping...\n";
+            }
+            next;
+        }
+
         if (Data::Localize::DEBUG()) {
             print STDERR "[Data::Localize::Namespace]: lexicon_get - Trying $klass\n";
         }
