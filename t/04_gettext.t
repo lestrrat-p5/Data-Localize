@@ -3,7 +3,7 @@ use lib "t/lib";
 use utf8;
 use File::Spec;
 use File::Temp qw(tempdir);
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Test::Data::Localize;
 
 {
@@ -19,6 +19,13 @@ use_ok "Data::Localize::Gettext";
     my $loc = Data::Localize::Gettext->new(
         path => 't/lib/Test/Data/Localize/Gettext/*.po'
     );
+
+    is_deeply(
+        $loc->paths,
+        ['t/lib/Test/Data/Localize/Gettext/*.po'],
+        'paths contains single glob value in t/lib - BUILDARGS handles path argument correctly'
+    );
+
     my $out = $loc->localize_for(
         lang => 'ja',
         id   => 'Hello, stranger!',
@@ -49,6 +56,13 @@ EOM
     close($fh);
 
     $loc->localizers->[0]->path_add($file);
+
+    is_deeply(
+        $loc->localizers->[0]->paths,
+        [ 't/lib/Test/Data/Localize/Gettext/*.po', $file ],
+        'paths contains newly added path'
+    );
+
     $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、おじゃまんぼう！', q{translation for "Hello, stranger!" from new file});
 
