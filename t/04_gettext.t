@@ -43,17 +43,10 @@ use_ok "Data::Localize::Gettext";
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!"});
 
-    # Generate a new po file so that we can add it to the path list
-    my $dir = tempdir(CLEANUP => 1);
-    my $file = File::Spec->catfile($dir, 'ja.po');
-    open(my $fh, '>', $file) or die "Could not open $file: $!";
-
-    binmode($fh, ':utf8');
-    print $fh <<EOM;
+    my $file = write_po( <<EOM );
 msgid "Hello, stranger!"
 msgstr "%1さん、おじゃまんぼう！"
 EOM
-    close($fh);
 
     $loc->localizers->[0]->path_add($file);
 
@@ -82,17 +75,10 @@ SKIP: {
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!" from BerkeleyDB file});
 
-    # Generate a new po file so that we can add it to the path list
-    my $dir = tempdir(CLEANUP => 1);
-    my $file = File::Spec->catfile($dir, 'ja.po');
-    open(my $fh, '>', $file) or die "Could not open $file: $!";
-
-    binmode($fh, ':utf8');
-    print $fh <<EOM;
+    my $file = write_po( <<EOM );
 msgid "Hello, stranger!"
 msgstr "%1さん、おじゃまんぼう！"
 EOM
-    close($fh);
 
     $loc->localizers->[0]->path_add($file);
     $out = $loc->localize('Hello, stranger!', '牧大輔');
@@ -119,4 +105,18 @@ EOM
         args => [ '牧大輔' ],
     );
     is($out, '牧大輔:a:b:cを動的に作成したぜ!', 'dynamic translation');
+}
+
+sub write_po {
+    my $po = shift;
+
+    my $dir = tempdir(CLEANUP => 1);
+    my $file = File::Spec->catfile($dir, 'ja.po');
+    open(my $fh, '>', $file) or die "Could not open $file: $!";
+
+    binmode($fh, ':utf8');
+    print $fh $po;
+    close($fh);
+
+    return $file;
 }
