@@ -33,7 +33,7 @@ has 'paths' => (
 
 after 'path_add' => sub {
     my $self = shift;
-    $self->load_from_path($_) for @{ $self->paths };
+    $self->load_from_path($_) for @_;
 };
 
 has 'storage_class' => (
