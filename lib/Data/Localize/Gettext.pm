@@ -24,7 +24,7 @@ has 'paths' => (
     isa => 'ArrayRef',
     trigger => sub {
         my $self = shift;
-        $self->load_from_path($_) for @{$_[0]}
+        $self->load_from_path($_) for @{$_[0]};
     },
     provides => {
         unshift => 'path_add',
@@ -132,6 +132,7 @@ my @fuzzy;
         %var = ();
     };
 
+    local $_;
     while (<$fh>) {
         $_ = Encode::decode($self->encoding, $_, Encode::FB_CROAK());
         s/[\015\012]*\z//;                  # fix CRLF issues
