@@ -27,7 +27,7 @@ has 'paths' => (
         $self->load_from_path($_) for @{$_[0]};
     },
     provides => {
-        unshift => 'path_add',
+        push => 'path_add',
     }
 );
 
