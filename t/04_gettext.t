@@ -24,7 +24,7 @@ use_ok "Data::Localize::Gettext";
         id   => 'Hello, stranger!',
         args => [ '牧大輔' ],
     );
-    is($out, '牧大輔さん、こんにちは!');
+    is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!"});
 }
 
 {
@@ -34,7 +34,7 @@ use_ok "Data::Localize::Gettext";
         path => 't/lib/Test/Data/Localize/Gettext/*.po'
     );
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
-    is($out, '牧大輔さん、こんにちは!');
+    is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!"});
 
     # Generate a new po file so that we can add it to the path list
     my $dir = tempdir(CLEANUP => 1);
@@ -50,7 +50,7 @@ EOM
 
     $loc->localizers->[0]->path_add($file);
     $out = $loc->localize('Hello, stranger!', '牧大輔');
-    is($out, '牧大輔さん、おじゃまんぼう！');
+    is($out, '牧大輔さん、おじゃまんぼう！', q{translation for "Hello, stranger!" from new file});
 
 }
 
@@ -66,7 +66,7 @@ SKIP: {
         storage_class => 'BerkeleyDB'
     );
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
-    is($out, '牧大輔さん、こんにちは!');
+    is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!" from BerkeleyDB file});
 
     # Generate a new po file so that we can add it to the path list
     my $dir = tempdir(CLEANUP => 1);
@@ -82,7 +82,7 @@ EOM
 
     $loc->localizers->[0]->path_add($file);
     $out = $loc->localize('Hello, stranger!', '牧大輔');
-    is($out, '牧大輔さん、おじゃまんぼう！');
+    is($out, '牧大輔さん、おじゃまんぼう！', q{translation for "Hello, stranger!" from new file after BerkeleyDB});
 
 }
 
@@ -104,5 +104,5 @@ EOM
         id   => 'Dynamically Create Me!',
         args => [ '牧大輔' ],
     );
-    is($out, '牧大輔:a:b:cを動的に作成したぜ!');
+    is($out, '牧大輔:a:b:cを動的に作成したぜ!', 'dynamic translation');
 }
