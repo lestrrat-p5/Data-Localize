@@ -1,9 +1,9 @@
 
 package Data::Localize::Gettext;
 use utf8;
-use Encode ();
 use Any::Moose;
 use Any::Moose 'X::AttributeHelpers';
+use Data::Localize::Gettext::Parser;
 use File::Basename ();
 use File::Spec;
 use File::Temp qw(tempdir);
@@ -15,7 +15,6 @@ has 'encoding' => (
     is => 'rw',
     isa => 'Str',
     default => 'utf-8',
-    lazy => 1,
 );
 
 has 'paths' => (
@@ -61,6 +60,18 @@ has 'lexicon_map' => (
     }
 );
 
+has 'use_fuzzy' => (
+    is => 'ro',
+    isa => 'Bool',
+    default => 0,
+);
+
+has 'allow_empty' => (
+    is => 'ro',
+    isa => 'Bool',
+    default => 0,
+);
+
 __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
@@ -103,90 +114,24 @@ sub load_from_file {
         print STDERR "[Data::Localize::Gettext]: load_from_file - loading from file $file\n"
     }
 
-    my %lexicon;
-    open(my $fh, '<', $file) or die "Could not open $file: $!";
+    my $parser = Data::Localize::Gettext::Parser->new(
+        use_fuzzy  => $self->use_fuzzy(),
+        keep_empty => $self->allow_empty(),
+        encoding   => $self->encoding(),
+    );
 
-    # This stuff here taken out of Locale::Maketext::Lexicon, and
-    # modified by daisuke
-    my (%var, $key, @comments, @ret, @metadata);
-my $UseFuzzy = 0;
-my $KeepFuzzy = 0;
-my $AllowEmpty = 0;
-my @fuzzy;
-    my $process    = sub {
-        if ( length( $var{msgid} ) and length( $var{msgstr} ) and ( $UseFuzzy or !$var{fuzzy} ) ) {
-            $lexicon{ $var{msgid} } = $var{msgstr};
-        }
-        elsif ($AllowEmpty) {
-            $lexicon{ $var{msgid} } = '';
-        }
-        if ( defined $var{msgid} && $var{msgid} eq '' ) {
-            push @metadata, $self->parse_metadata( $var{msgstr} );
-        }
-        else {
-            push @comments, $var{msgid}, $var{msgcomment};
-        }
-        if ( $KeepFuzzy && $var{fuzzy} ) {
-            push @fuzzy, $var{msgid}, 1;
-        }
-        %var = ();
-    };
-
-    local $_;
-    while (<$fh>) {
-        $_ = Encode::decode($self->encoding, $_, Encode::FB_CROAK());
-        s/[\015\012]*\z//;                  # fix CRLF issues
-
-        /^(msgid|msgstr) +"(.*)" *$/
-            ? do {                          # leading strings
-            $key = $1;
-            my $x = $2;
-            $x =~ s/\\(n|\\)/
-                $1 eq 'n' ? "\n" :
-                            "\\" /gex;
-            $var{$key} = $x;
-            }
-            :
-
-            /^"(.*)" *$/
-            ? do {                          # continued strings
-            $var{$key} .= $1;
-            }
-            :
-
-            /^# (.*)$/
-            ? do {                          # user comments
-            $var{msgcomment} .= $1 . "\n";
-            }
-            :
-
-            /^#, +(.*) *$/
-            ? do {                          # control variables
-            $var{$_} = 1 for split( /,\s+/, $1 );
-            }
-            :
-
-            /^ *$/ && %var
-            ? do {                          # interpolate string escapes
-            $process->($_);
-            }
-            : ();
-
-    }
-
-    # do not silently skip last entry
-    $process->() if keys %var != 0;
+    my $lexicon = $parser->parse_file($file);
 
     my $lang = File::Basename::basename($file);
     $lang =~ s/\.[mp]o$//;
 
     if (Data::Localize::DEBUG()) {
         print STDERR "[Data::Localize::Gettext]: load_from_file - registering ",
-            scalar keys %lexicon, " keys\n"
+            scalar keys %{$lexicon}, " keys\n"
     }
 
     # This needs to be merged
-    $self->lexicon_merge($lang, \%lexicon);
+    $self->lexicon_merge($lang, $lexicon);
 }
 
 sub format_string {
@@ -265,24 +210,6 @@ sub _build_storage {
         return $class->new();
     }
 }
-
-sub parse_metadata {
-    my $self = shift;
-    return map {
-              (/^([^\x00-\x1f\x80-\xff :=]+):\s*(.*)$/)
-            ? ( $1 eq 'Content-Type' )
-                ? do {
-                    my $enc = $2;
-                    if ( $enc =~ /\bcharset=\s*([-\w]+)/i ) {
-                        $self->encoding($1);
-                    }
-                    ( "__Content-Type", $enc );
-                }
-                : ( "__$1", $2 )
-            : ();
-    } split( /\r*\n+\r*/, $_[0]);
-}
-
 
 1;
 

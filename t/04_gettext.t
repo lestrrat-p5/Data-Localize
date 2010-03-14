@@ -3,7 +3,7 @@ use lib "t/lib";
 use utf8;
 use File::Spec;
 use File::Temp qw(tempdir);
-use Test::More tests => 10;
+use Test::More tests => 16;
 use Test::Data::Localize;
 
 {
@@ -43,7 +43,7 @@ use_ok "Data::Localize::Gettext";
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!"});
 
-    my $file = write_po( <<EOM );
+    my $file = write_po( <<'EOM' );
 msgid "Hello, stranger!"
 msgstr "%1さん、おじゃまんぼう！"
 EOM
@@ -75,7 +75,7 @@ SKIP: {
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!" from BerkeleyDB file});
 
-    my $file = write_po( <<EOM );
+    my $file = write_po( <<'EOM' );
 msgid "Hello, stranger!"
 msgstr "%1さん、おじゃまんぼう！"
 EOM
@@ -105,6 +105,138 @@ EOM
         args => [ '牧大輔' ],
     );
     is($out, '牧大輔:a:b:cを動的に作成したぜ!', 'dynamic translation');
+}
+
+{
+    my $file = write_po( <<'EOM' );
+msgid "Hello, stranger!"
+msgstr "Bonjour, étranger!"
+EOM
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 0,
+        keep_empty => 0,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon,
+        { 'Hello, stranger!' => 'Bonjour, étranger!' },
+        'parsing a simple po file'
+    );
+}
+
+{
+    my $file = write_po( <<'EOM' );
+msgid "Hello, stranger!"
+msgstr "Bonjour, étranger!"
+
+msgid "I am empty"
+msgstr ""
+EOM
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 0,
+        keep_empty => 0,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon,
+        { 'Hello, stranger!' => 'Bonjour, étranger!' },
+        'parsing a po file with an empty string for one id'
+    );
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 0,
+        keep_empty => 1,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon, {
+            'Hello, stranger!' => 'Bonjour, étranger!',
+            'I am empty'       => q{},
+        },
+        'parsing a po file with an empty string for one id - keep_empty is true'
+    );
+}
+
+{
+    my $file = write_po( <<'EOM' );
+msgid "Hello, stranger!"
+msgstr "Bonjour, étranger!"
+
+#, fuzzy
+msgid "I don't know"
+msgstr "Je ne sais pas"
+EOM
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 0,
+        keep_empty => 0,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon,
+        { 'Hello, stranger!' => 'Bonjour, étranger!' },
+        'parsing a po file with a fuzzy translation'
+    );
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 1,
+        keep_empty => 0,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon, {
+            'Hello, stranger!' => 'Bonjour, étranger!',
+            q{I don't know}    => 'Je ne sais pas',
+        },
+        'parsing a po file with a fuzzy translation - use_fuzzy is true'
+    );
+}
+
+{
+    my $file = write_po( <<'EOM' );
+msgid "Hello, stranger!"
+msgstr "Bonjour, étranger!"
+
+msgid "One\n"
+"Two \\ Three\n"
+"Four"
+msgstr "Un\n"
+"Deux \\ Trois\n"
+"Quatre"
+EOM
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 0,
+        keep_empty => 0,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon,
+        { 'Hello, stranger!' => 'Bonjour, étranger!',
+          "One\nTwo \\ Three\nFour" => "Un\nDeux \\ Trois\nQuatre",
+        },
+        'parsing a po file with a multi-line id and translation'
+    );
 }
 
 sub write_po {
