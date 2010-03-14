@@ -1,12 +1,16 @@
 package Data::Localize::Storage::BerkeleyDB;
 use Any::Moose;
+use Any::Moose 'Util::TypeConstraints';
 use BerkeleyDB;
 
 with 'Data::Localize::Storage';
 
+my @bdb_classes = qw( BerkeleyDB::Hash BerkeleyDB::Btree BerkeleyDB::Recno BerkeleyDB::Queue );
+class_type($_) for @bdb_classes;
+
 has 'db' => (
     is => 'rw',
-    isa => ' BerkeleyDB::Hash | BerkeleyDB::Btree | BerkeleyDB::Recno | BerkeleyDB::Queue '
+    isa => (join '|', @bdb_classes),
 );
 
 sub BUILD {
@@ -47,6 +51,7 @@ sub set {
 __PACKAGE__->meta->make_immutable();
 
 no Any::Moose;
+no Any::Moose 'Util::TypeConstraints';
 
 1;
 
