@@ -9,7 +9,7 @@ my @bdb_classes = qw( BerkeleyDB::Hash BerkeleyDB::Btree BerkeleyDB::Recno Berke
 class_type($_) for @bdb_classes;
 
 has 'db' => (
-    is => 'rw',
+    is => 'ro',
     isa => (join '|', @bdb_classes),
 );
 

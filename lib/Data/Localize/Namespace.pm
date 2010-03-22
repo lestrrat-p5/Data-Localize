@@ -8,8 +8,9 @@ use Encode ();
 with 'Data::Localize::Localizer';
 
 has 'namespaces' => (
-    is => 'rw',
+    is => 'ro',
     isa => 'ArrayRef',
+    default => sub { [] },
 );
 
 __PACKAGE__->meta->make_immutable;

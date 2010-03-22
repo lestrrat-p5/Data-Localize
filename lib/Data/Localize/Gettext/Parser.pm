@@ -3,7 +3,7 @@ use Any::Moose;
 use namespace::autoclean;
 
 has 'encoding' => (
-    is       => 'rw',
+    is       => 'ro',
     isa      => 'Str',
     required => 1,
 );
@@ -20,31 +20,19 @@ has 'keep_empty' => (
     required => 1,
 );
 
-has '_lexicon' => (
-    is => 'rw',
-    isa => 'HashRef',
-);
-
-has '_msgids' => (
-    is => 'rw',
-    isa => 'HashRef',
-);
-
 sub parse_file {
     my ($self, $file) = @_;
 
     my $enc = ':encoding(' . $self->encoding . ')';
     open(my $fh, "<$enc", $file) or die "Could not open $file: $!";
 
-    $self->_lexicon( {} );
-
     my @block = ();
-
+    my %lexicons;
     while ( defined( my $line = <$fh> ) ) {
         $line =~ s/[\015\012]*\z//;                  # fix CRLF issues
 
         if ( $line =~ /^\s*$/ ) {
-            $self->_process_block(\@block) if @block;
+            $self->_process_block(\@block, \%lexicons) if @block;
             @block = ();
             next;
         }
@@ -52,13 +40,13 @@ sub parse_file {
         push @block, $line;
     }
 
-    $self->_process_block(\@block) if @block;
+    $self->_process_block(\@block, \%lexicons) if @block;
 
-    return $self->_lexicon();
+    return \%lexicons;
 }
 
 sub _process_block {
-    my ($self, $block) = @_;
+    my ($self, $block, $lexicons) = @_;
 
     my $msgid = q{};
     my $msgstr = q{};
@@ -98,7 +86,7 @@ sub _process_block {
 
     s/\\(n|\\)/$1 eq 'n' ? "\n" : "\\" /ge for $msgid, $msgstr;
 
-    $self->_lexicon()->{$msgid} = $msgstr;
+    $lexicons->{$msgid} = $msgstr;
 
     return;
 }

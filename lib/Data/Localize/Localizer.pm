@@ -8,7 +8,7 @@ use Any::Moose '::Util::TypeConstraints';
 requires 'register', 'lexicon_get';
 
 has 'style' => (
-    is => 'rw',
+    is => 'ro',
     isa => enum([qw(gettext maketext)]),
     default => 'maketext',
 );

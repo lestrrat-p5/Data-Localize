@@ -37,16 +37,20 @@ has auto_localizer => (
 );
 
 has languages => (
-    is => 'rw',
+    is => 'ro',
     isa => 'ArrayRef',
-    auto_deref => 1,
+    writer => 'set_languages',
     lazy_build => 1,
 );
 
+around set_languages => sub {
+    my ($next, $self, @args) = @_;
+    $self->$next([ @_ > 0 ? @_ : $self->detect_languages ]);
+};
+
 has fallback_languages => (
-    is => 'rw',
+    is => 'ro',
     isa => 'ArrayRef',
-    auto_deref => 1,
     lazy_build => 1,
 );
 
@@ -134,6 +138,16 @@ sub add_fallback_languages {
     push @{$self->languages}, @_;
 }
 
+sub all_fallback_languages {
+    my $self = shift;
+    return @{$self->fallback_languages};
+}
+
+sub all_languages {
+    my $self = shift;
+    return @{$self->languages};
+}
+
 sub push_localizers {
     my $self = shift;
     push @{$self->localizers}, @_;
@@ -163,7 +177,7 @@ sub detect_languages {
     my $self = shift;
     my @lang = I18N::LangTags::implicate_supers( 
         I18N::LangTags::Detect::detect() ||
-        $self->fallback_languages,
+        $self->all_fallback_languages,
     );
     if (DEBUG()) {
         print STDERR "[Data::Localize]: detect_languages auto-detected ", join(", ", map { "'$_'" } @lang ), "\n";
@@ -175,7 +189,7 @@ sub detect_languages_from_header {
     my $self = shift;
     my @lang = I18N::LangTags::implicate_supers( 
         I18N::LangTags::Detect->http_accept_langs( $_[0] || $ENV{HTTP_ACCEPT_LANGUAGE}),
-        $self->fallback_languages,
+        $self->all_fallback_languages,
     );
     if (DEBUG()) {
         print STDERR "[Data::Localize]: detect_languages_from_header detected ", join(", ", map { "'$_'" } @lang ), "\n";
@@ -183,15 +197,10 @@ sub detect_languages_from_header {
     return wantarray ? @lang : \@lang;
 }
 
-sub set_languages {
-    my $self = shift;
-    $self->languages([ @_ > 0 ? @_ : $self->detect_languages ]);
-}
-
 sub localize {
     my ($self, $key, @args) = @_;
 
-    foreach my $lang ($self->languages) {
+    foreach my $lang ($self->all_languages) {
         print STDERR "[Data::Localize]: localize - looking up $lang\n" if DEBUG;
         foreach my $localizer (@{$self->get_localizer_from_lang($lang) || []}) {
             my $out = $localizer->localize_for(
@@ -208,7 +217,7 @@ sub localize {
     # if we got here, we missed on all languages.
     # one last shot. try the '*' slot
     foreach my $localizer (@{$self->get_localizer_from_lang('*') || []}) {
-        foreach my $lang ($self->languages) {
+        foreach my $lang ($self->all_languages) {
             if (DEBUG()) {
                 print STDERR "[Data::Localize]: localize - trying $lang for '*' with localizer $localizer\n" if DEBUG;
             }

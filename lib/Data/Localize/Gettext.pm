@@ -11,13 +11,13 @@ use Data::Localize::Storage::Hash;
 with 'Data::Localize::Localizer';
 
 has 'encoding' => (
-    is => 'rw',
+    is => 'ro',
     isa => 'Str',
     default => 'utf-8',
 );
 
 has 'paths' => (
-    is => 'rw',
+    is => 'ro',
     isa => 'ArrayRef',
     trigger => sub {
         my $self = shift;
@@ -26,7 +26,7 @@ has 'paths' => (
 );
 
 has 'storage_class' => (
-    is => 'rw',
+    is => 'ro',
     isa => 'Str',
     default => sub {
         return '+Data::Localize::Storage::Hash';
@@ -34,13 +34,13 @@ has 'storage_class' => (
 );
 
 has 'storage_args' => (
-    is => 'rw',
+    is => 'ro',
     isa => 'HashRef',
     default => sub { +{} }
 );
 
 has 'lexicon_map' => (
-    is => 'rw',
+    is => 'ro',
     isa => 'HashRef[Data::Localize::Storage]',
     default => sub { +{} },
 );
@@ -74,7 +74,7 @@ sub BUILDARGS {
 
 sub path_add {
     my $self = shift;
-    push @{$self->{paths}}, @_;
+    push @{$self->paths}, @_;
     $self->load_from_path($_) for @_;
 }
 
