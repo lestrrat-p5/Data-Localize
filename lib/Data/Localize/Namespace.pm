@@ -71,7 +71,7 @@ sub get_lexicon {
         # but the class really hasn't been loaded yet.
         no strict 'refs';
         my $first_load = 0;
-        if (! $LOADED{$klass}) {
+        if (! $LOADED{$klass} && ! $LOAD_FAILED{$klass}) {
             if (defined %{"$klass\::Lexicon"} && defined %{"$klass\::"}) {
                 if (Data::Localize::DEBUG()) {
                     print STDERR "[Data::Localize::Namespace]: get_lexicon - class already loaded\n";
