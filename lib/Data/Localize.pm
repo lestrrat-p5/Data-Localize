@@ -1,7 +1,6 @@
 package Data::Localize;
 use Any::Moose;
 use Any::Moose '::Util::TypeConstraints';
-use Any::Moose 'X::AttributeHelpers';
 use I18N::LangTags ();
 use I18N::LangTags::Detect ();
 use 5.008;
@@ -38,25 +37,17 @@ has auto_localizer => (
 );
 
 has languages => (
-    metaclass => 'Collection::Array',
     is => 'rw',
     isa => 'ArrayRef',
     auto_deref => 1,
     lazy_build => 1,
-    provides => {
-        push => 'add_languages',
-    }
 );
 
 has fallback_languages => (
-    metaclass => 'Collection::Array',
     is => 'rw',
     isa => 'ArrayRef',
     auto_deref => 1,
     lazy_build => 1,
-    provides => {
-        push => 'add_fallback_languages',
-    }
 );
 
 # Localizers are the actual minions that perform the localization.
@@ -87,20 +78,13 @@ coerce 'Data::Localize::LocalizerListArg'
 ;
 
 has localizers => (
-    metaclass => 'Collection::Array',
     is => 'ro',
     isa => 'Data::Localize::LocalizerListArg',
     coerce => 1,
     default => sub { +[] },
-    provides => {
-        'push'  => 'push_localizers',
-        'count' => 'count_localizers',
-        'grep'  => 'grep_localizers',
-    }
 );
 
 has localizer_map => (
-    metaclass => 'Collection::Hash',
     is => 'ro',
     isa => 'HashRef',
     default => sub { +{} },
@@ -138,6 +122,41 @@ sub _build_auto_localizer {
     my $self = shift;
     require Data::Localize::Auto;
     Data::Localize::Auto->new( style => $self->auto_style );
+}
+
+sub add_languages {
+    my $self = shift;
+    push @{$self->languages}, @_;
+}
+
+sub add_fallback_languages {
+    my $self = shift;
+    push @{$self->languages}, @_;
+}
+
+sub push_localizers {
+    my $self = shift;
+    push @{$self->localizers}, @_;
+}
+
+sub count_localizers {
+    my $self = shift;
+    return scalar @{$self->localizers};
+}
+
+sub grep_localizers {
+    my ($self, $cb) = @_;
+    grep { $cb->($_) } @{$self->localizers};
+}
+
+sub get_localizer_from_lang {
+    my ($self, $key) = @_;
+    return $self->localizer_map->{$key};
+}
+
+sub set_localizer_map {
+    my ($self, $key, $value) = @_;
+    return $self->localizer_map->{$key} = $value;
 }
 
 sub detect_languages {

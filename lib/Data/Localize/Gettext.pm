@@ -2,7 +2,6 @@
 package Data::Localize::Gettext;
 use utf8;
 use Any::Moose;
-use Any::Moose 'X::AttributeHelpers';
 use Data::Localize::Gettext::Parser;
 use File::Basename ();
 use File::Spec;
@@ -18,22 +17,19 @@ has 'encoding' => (
 );
 
 has 'paths' => (
-    metaclass => 'Collection::Array',
     is => 'rw',
     isa => 'ArrayRef',
     trigger => sub {
         my $self = shift;
         $self->load_from_path($_) for @{$_[0]};
     },
-    provides => {
-        push => 'path_add',
-    }
 );
 
-after 'path_add' => sub {
+sub path_add {
     my $self = shift;
+    push @{$self->{paths}}, @_;
     $self->load_from_path($_) for @_;
-};
+}
 
 has 'storage_class' => (
     is => 'rw',
@@ -50,15 +46,20 @@ has 'storage_args' => (
 );
 
 has 'lexicon_map' => (
-    metaclass => 'Collection::Hash',
     is => 'rw',
     isa => 'HashRef[Data::Localize::Storage]',
     default => sub { +{} },
-    provides => {
-        get => 'lexicon_map_get',
-        set => 'lexicon_map_set'
-    }
 );
+
+sub lexicon_map_get {
+    my ($self, $key) = @_;
+    return $self->lexicon_map->{ $key };
+}
+
+sub lexicon_map_set {
+    my ($self, $key, $value) = @_;
+    return $self->lexicon_map->{ $key } = $value;
+}
 
 has 'use_fuzzy' => (
     is => 'ro',

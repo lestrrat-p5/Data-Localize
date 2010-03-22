@@ -2,35 +2,39 @@
 
 package Data::Localize::Namespace;
 use Any::Moose;
-use Any::Moose 'X::AttributeHelpers';
 use Module::Pluggable::Object;
 use Encode ();
 
 with 'Data::Localize::Localizer';
 
 has 'namespaces' => (
-    metaclass => 'Collection::Array',
     is => 'rw',
     isa => 'ArrayRef',
-    auto_deref => 1,
-    provides => {
-        unshift => 'add_namespaces'
-    }
 );
 
 __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
 
+sub add_namespaces {
+    my $self = shift;
+    unshift @{ $self->namespaces }, @_;
+}
+
+sub all_namespaces {
+    my $self = shift;
+    return @{ $self->namespaces };
+}
+
 sub register {
     my ($self, $loc) = @_;
     my $finder = Module::Pluggable::Object->new(
         'require' => 1,
-        search_path => [ $self->namespaces ]
+        search_path => [ $self->all_namespaces ]
     );
 
     # find the languages that we currently support
-    my $re = join('|', $self->namespaces);
+    my $re = join('|', $self->all_namespaces);
     foreach my $plugin ($finder->plugins) {
         $plugin =~ s/^(?:$re):://;
         $plugin =~ s/::/_/g;
@@ -46,7 +50,7 @@ sub lexicon_get {
 
     $lang =~ s/-/_/g;
 
-    foreach my $namespace ($self->namespaces) {
+    foreach my $namespace ($self->all_namespaces) {
         my $klass = "$namespace\::$lang";
 
         if ($LOAD_FAILED{ $klass }++) {

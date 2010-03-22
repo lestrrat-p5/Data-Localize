@@ -1,5 +1,6 @@
 package Data::Localize::Gettext::Parser;
 use Any::Moose;
+use namespace::autoclean;
 
 has 'encoding' => (
     is       => 'rw',
