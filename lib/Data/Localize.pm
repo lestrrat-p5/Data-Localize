@@ -507,6 +507,10 @@ Filter localizers
 Gettext style localization files -- Make it possible to decode them
 Check performance -- see benchmark/benchmark.pl
 
+=head1 CONTRIBUTORS
+
+Dave Rolsky
+
 =head1 AUTHOR
 
 Daisuke Maki C<< <daisuke@endeworks.jp> >>
