@@ -36,17 +36,12 @@ has auto_localizer => (
     lazy_build => 1,
 );
 
-has languages => (
-    is => 'ro',
+has _languages => (
+    is => 'rw',
     isa => 'ArrayRef',
-    writer => 'set_languages',
     lazy_build => 1,
+    init_arg => 'languages',
 );
-
-around set_languages => sub {
-    my ($next, $self, @args) = @_;
-    $self->$next([ @_ > 0 ? @_ : $self->detect_languages ]);
-};
 
 has fallback_languages => (
     is => 'ro',
@@ -113,7 +108,7 @@ sub _build_fallback_languages {
     return [];
 }
 
-sub _build_languages {
+sub _build__languages {
     my $self = shift;
     $self->detect_languages();
 }
@@ -126,12 +121,18 @@ sub _build_auto_localizer {
 
 sub add_languages {
     my $self = shift;
-    push @{$self->languages}, @_;
+    push @{$self->_languages}, @_;
 }
+
+sub set_languages {
+    my $self = shift;
+    $self->_languages([ @_ > 0 ? @_ : $self->detect_languages ]);
+};
+
 
 sub add_fallback_languages {
     my $self = shift;
-    push @{$self->languages}, @_;
+    push @{$self->_languages}, @_;
 }
 
 sub all_fallback_languages {
@@ -139,9 +140,9 @@ sub all_fallback_languages {
     return @{$self->fallback_languages};
 }
 
-sub all_languages {
+sub languages {
     my $self = shift;
-    return @{$self->languages};
+    return @{$self->_languages};
 }
 
 sub push_localizers {
@@ -196,7 +197,7 @@ sub detect_languages_from_header {
 sub localize {
     my ($self, $key, @args) = @_;
 
-    foreach my $lang ($self->all_languages) {
+    foreach my $lang ($self->languages) {
         print STDERR "[Data::Localize]: localize - looking up $lang\n" if DEBUG;
         foreach my $localizer (@{$self->get_localizer_from_lang($lang) || []}) {
             my $out = $localizer->localize_for(
@@ -213,7 +214,7 @@ sub localize {
     # if we got here, we missed on all languages.
     # one last shot. try the '*' slot
     foreach my $localizer (@{$self->get_localizer_from_lang('*') || []}) {
-        foreach my $lang ($self->all_languages) {
+        foreach my $lang ($self->languages) {
             if (DEBUG()) {
                 print STDERR "[Data::Localize]: localize - trying $lang for '*' with localizer $localizer\n" if DEBUG;
             }
