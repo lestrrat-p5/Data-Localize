@@ -2,26 +2,28 @@ package Data::Localize::Storage::BerkeleyDB;
 use Any::Moose;
 use Any::Moose 'Util::TypeConstraints';
 use BerkeleyDB;
+use Encode ();
 
 with 'Data::Localize::Storage';
 
 my @bdb_classes = qw( BerkeleyDB::Hash BerkeleyDB::Btree BerkeleyDB::Recno BerkeleyDB::Queue );
 class_type($_) for @bdb_classes;
 
-has 'db' => (
-    is => 'ro',
+has '_db' => (
+    is => 'rw',
     isa => (join '|', @bdb_classes),
+    init_arg => 'db',
 );
 
 sub BUILD {
     my ($self, $args) = @_;
-    if (! $self->db) {
+    if (! $self->_db) {
         my $class = $args->{bdb_class} || 'Hash';
         if ($class !~ s/^\+//) {
             $class = "BerkeleyDB::$class";
         }
         Any::Moose::load_class($class);
-        $self->db( $class->new( $args->{bdb_args} || {} ) ||
+        $self->_db( $class->new( $args->{bdb_args} || {} ) ||
             confess "Failed to create $class: $BerkeleyDB::Error"
         );
     }
@@ -31,18 +33,17 @@ sub BUILD {
 sub get {
     my ($self, $key, $flags) = @_;
     my $value;
-    my $rc = $self->db->db_get($key, $value, $flags || 0);
+    my $rc = $self->_db->db_get($key, $value, $flags || 0);
     if ($rc == 0) {
         # BerkeleyDB gives us values with the flags off, so put them back on
-        Encode::_utf8_on($value);
-        return $value;
+        return Encode::decode_utf8($value);
     }
     return ();
 }
 
 sub set {
     my ($self, $key, $value, $flags) = @_;
-    my $rc = $self->db->db_put($key, $value, $flags || 0);
+    my $rc = $self->_db->db_put($key, $value, $flags || 0);
     if ($rc != 0) {
         confess "Failed to set value $key";
     }

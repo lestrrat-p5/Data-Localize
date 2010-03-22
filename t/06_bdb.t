@@ -1,6 +1,11 @@
 use strict;
-use Test::More tests => 2;
+use lib "t/lib";
+use utf8;
+use Test::More tests => 3;
 use Test::Requires;
+use Test::Data::Localize qw(write_po);
+
+use_ok "Data::Localize";
 
 test_requires 'BerkeleyDB';
 

@@ -1,10 +1,8 @@
 use strict;
 use lib "t/lib";
 use utf8;
-use File::Spec;
-use File::Temp qw(tempdir);
 use Test::More tests => 14;
-use Test::Data::Localize;
+use Test::Data::Localize qw(write_po);
 
 {
     my $tb = Test::Builder->new();
@@ -214,16 +212,3 @@ EOM
     );
 }
 
-sub write_po {
-    my $po = shift;
-
-    my $dir = tempdir(CLEANUP => 1);
-    my $file = File::Spec->catfile($dir, 'ja.po');
-    open(my $fh, '>', $file) or die "Could not open $file: $!";
-
-    binmode($fh, ':utf8');
-    print $fh $po;
-    close($fh);
-
-    return $file;
-}
