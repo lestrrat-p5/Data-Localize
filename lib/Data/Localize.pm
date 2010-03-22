@@ -43,10 +43,11 @@ has _languages => (
     init_arg => 'languages',
 );
 
-has fallback_languages => (
-    is => 'ro',
+has _fallback_languages => (
+    is => 'rw',
     isa => 'ArrayRef',
     lazy_build => 1,
+    init_arg => 'languages',
 );
 
 # Localizers are the actual minions that perform the localization.
@@ -104,8 +105,8 @@ sub BUILD {
     return $self;
 }
 
-sub _build_fallback_languages {
-    return [];
+sub _build__fallback_languages {
+    return [ 'en' ];
 }
 
 sub _build__languages {
@@ -132,12 +133,12 @@ sub set_languages {
 
 sub add_fallback_languages {
     my $self = shift;
-    push @{$self->_languages}, @_;
+    push @{$self->_fallback_languages}, @_;
 }
 
-sub all_fallback_languages {
+sub fallback_languages {
     my $self = shift;
-    return @{$self->fallback_languages};
+    return @{$self->_fallback_languages};
 }
 
 sub languages {
@@ -174,7 +175,7 @@ sub detect_languages {
     my $self = shift;
     my @lang = I18N::LangTags::implicate_supers( 
         I18N::LangTags::Detect::detect() ||
-        $self->all_fallback_languages,
+        $self->fallback_languages,
     );
     if (DEBUG()) {
         print STDERR "[Data::Localize]: detect_languages auto-detected ", join(", ", map { "'$_'" } @lang ), "\n";
@@ -186,7 +187,7 @@ sub detect_languages_from_header {
     my $self = shift;
     my @lang = I18N::LangTags::implicate_supers( 
         I18N::LangTags::Detect->http_accept_langs( $_[0] || $ENV{HTTP_ACCEPT_LANGUAGE}),
-        $self->all_fallback_languages,
+        $self->fallback_languages,
     );
     if (DEBUG()) {
         print STDERR "[Data::Localize]: detect_languages_from_header detected ", join(", ", map { "'$_'" } @lang ), "\n";
