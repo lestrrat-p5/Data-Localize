@@ -354,19 +354,47 @@ Locale::Maketext allows you to supply an "_AUTO" key in the lexicon hash,
 which allows you to pass a non-existing key to the localize() method, and
 use it as the actual lexicon, if no other applicable lexicons exists.
 
-    # here, we're deliberately not setting any localizers
-    my $loc = Data::Localize->new(auto => 1);
-
-    print $loc->localize('Hello, [_1]', 'John Doe'), "\n";
-
 Locale::Maketext attaches this to the lexicon hash itself, but Data::Localizer
 differs in that it attaches to the Data::Localizer object itself, so you
 don't have to place _AUTO everwhere.
 
+    # here, we're deliberately not setting any localizers
+    my $loc = Data::Localize->new(auto => 1);
+
+    # previous auto => 1 will force Data::Localize to fallback to
+    # using the key ('Hello, [_1]') as the localization token.
+    print $loc->localize('Hello, [_1]', 'John Doe'), "\n";
+
 =head1 UTF8
 
-All data is expected to be in decoded utf8. You must "use utf8" for all values
+All data is expected to be in decoded utf8. You must "use utf8" or 
+decode them to Perl's internal representation for all values
 passed to Data::Localizer. We won't try to be smart for you. USE UTF8!
+
+=over 4
+
+=item Using Explicit decode()
+
+    use Encode q(decode decode_utf8);
+    use Data::Localizer;
+
+    my $loc = Data::Localize->new(...);
+
+    $loc->localize( $key, decode( 'iso-2022-jp', $value ) );
+
+    # if $value is encoded utf8...
+    # $loc->localize( $key, decode_utf8( $value ) );
+
+=item Using utf8
+
+"use utf8" is simpler, but do note that it will affect ALL your literal strings
+in the current scope
+
+    use utf8;
+
+    $loc->loclize( $key, "some-utf8-key-here" );
+
+=back
 
 =head1 USING ALTERNATE STORAGE
 
