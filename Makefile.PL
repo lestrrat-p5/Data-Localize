@@ -14,10 +14,8 @@ recommends 'BerkeleyDB';
 test_requires 'Test::More' => 0.94;
 test_requires 'Test::Requires';
 
-no_index directory => 't/lib';
-
 author_tests 'xt';
-
+auto_set_repository;
 auto_include_deps;
 no_index directory => 'tools';
 
