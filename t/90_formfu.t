@@ -1,17 +1,11 @@
 use strict;
 use utf8;
-use Test::More;
+use Test::More tests => 1;
+use Test::Requires;
 use Data::Localize;
 
-BEGIN
-{
-    eval "require HTML::FormFu; require CGI";
-    if ($@) {
-        plan(skip_all => "CGI/HTML::FormFu is not installed");
-    } else {
-        plan(tests => 1);
-    }
-}
+test_requires 'HTML::FormFu';
+test_requires 'CGI';
 
 my $cgi = CGI->new({
     submit => 'submit'

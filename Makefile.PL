@@ -15,6 +15,8 @@ requires_any_moose 'X::AttributeHelpers' => (
 );
 recommends 'BerkeleyDB';
 
+test_requires 'Test::Requires';
+
 no_index directory => 't/lib';
 
 auto_include_deps;
