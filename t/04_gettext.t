@@ -5,12 +5,6 @@ use Test::More tests => 8;
 use File::Spec;
 use t::Data::Localize::Test qw(write_po);
 
-{
-    my $tb = Test::Builder->new();
-    binmode $_, ':utf8'
-        for map { $tb->$_ } qw( output failure_output todo_output );
-}
-
 use_ok "Data::Localize";
 use_ok "Data::Localize::Gettext";
 

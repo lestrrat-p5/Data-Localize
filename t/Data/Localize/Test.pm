@@ -4,6 +4,7 @@ use strict;
 use base qw(Exporter);
 use File::Spec;
 use File::Temp qw(tempdir);
+use Test::More;
 
 our @EXPORT_OK = qw(write_po test_localizer);
 
@@ -12,6 +13,11 @@ BEGIN {
         map { ($_ => $ENV{$_}) }
         grep { /^DATA_LOCALIZE/ || /^ANY_MOOSE/ }
         keys %ENV;
+
+    # silence wide character warnings
+    my $tb = Test::Builder->new();
+    binmode $_, ':utf8'
+        for map { $tb->$_ } qw( output failure_output todo_output );
 }
 
 sub write_po {
