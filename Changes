@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.00012 22 Mar 2010
+  * Remove the use of AttributeHelpers -- doing this in Moose/Mouse is a pain
+  * Move POD tests to xt
+  * Factor out Gettext parser (Dave Rolsky)
+  * Only load Gettext lexicons for new paths in path_add (Dave Rolsky)
+  * Protect $_ when loading Gettext lexicons (Dave Rolsky)
+  * Predeclare class_type (Dave Rolsky)
+  * Silence test Warnings (Dave Rolsky)
+
 0.00011 15 Dec 2009
   * Don't attempt to load Namespace lexicons once we failed to load them.
   * Allow method calls for Maketext formats (UNTESTED -- will do more hacking)
