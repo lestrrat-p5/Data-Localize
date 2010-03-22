@@ -151,13 +151,13 @@ EOM
         'parsing a po file with an empty string for one id'
     );
 
-    my $parser = Data::Localize::Gettext::Parser->new(
+    $parser = Data::Localize::Gettext::Parser->new(
         encoding   => 'utf-8',
         use_fuzzy  => 0,
         keep_empty => 1,
     );
 
-    my $lexicon = $parser->parse_file($file);
+    $lexicon = $parser->parse_file($file);
 
     is_deeply(
         $lexicon, {
@@ -192,13 +192,13 @@ EOM
         'parsing a po file with a fuzzy translation'
     );
 
-    my $parser = Data::Localize::Gettext::Parser->new(
+    $parser = Data::Localize::Gettext::Parser->new(
         encoding   => 'utf-8',
         use_fuzzy  => 1,
         keep_empty => 0,
     );
 
-    my $lexicon = $parser->parse_file($file);
+    $lexicon = $parser->parse_file($file);
 
     is_deeply(
         $lexicon, {
