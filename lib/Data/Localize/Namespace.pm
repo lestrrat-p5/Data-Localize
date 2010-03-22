@@ -7,10 +7,11 @@ use Encode ();
 
 with 'Data::Localize::Localizer';
 
-has 'namespaces' => (
-    is => 'ro',
+has _namespaces => (
+    is => 'rw',
     isa => 'ArrayRef',
     default => sub { [] },
+    init_arg => 'namespaces',
 );
 
 __PACKAGE__->meta->make_immutable;
@@ -19,23 +20,23 @@ no Any::Moose;
 
 sub add_namespaces {
     my $self = shift;
-    unshift @{ $self->namespaces }, @_;
+    unshift @{ $self->_namespaces }, @_;
 }
 
-sub all_namespaces {
+sub namespaces {
     my $self = shift;
-    return @{ $self->namespaces };
+    return @{ $self->_namespaces };
 }
 
 sub register {
     my ($self, $loc) = @_;
     my $finder = Module::Pluggable::Object->new(
         'require' => 1,
-        search_path => [ $self->all_namespaces ]
+        search_path => [ $self->namespaces ]
     );
 
     # find the languages that we currently support
-    my $re = join('|', $self->all_namespaces);
+    my $re = join('|', $self->namespaces);
     foreach my $plugin ($finder->plugins) {
         $plugin =~ s/^(?:$re):://;
         $plugin =~ s/::/_/g;
@@ -51,7 +52,7 @@ sub lexicon_get {
 
     $lang =~ s/-/_/g;
 
-    foreach my $namespace ($self->all_namespaces) {
+    foreach my $namespace ($self->namespaces) {
         my $klass = "$namespace\::$lang";
 
         if ($LOAD_FAILED{ $klass }++) {
