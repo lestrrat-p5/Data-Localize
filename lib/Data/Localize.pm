@@ -326,6 +326,27 @@ Data::Localize is an object oriented approach to localization, aimed to
 be an alternate choice for Locale::Maketext, Locale::Maketext::Lexicon, and
 Locale::Maketext::Simple.
 
+=head1 RATIONALE
+
+Functionality-wise, Locale::Maketext does what it advertises to do.
+Here's a few reasons why you might or might not choose Data::Localize
+over Locale::Maketext-based localizers:
+
+=head2 Object-Oriented
+
+Data::Localize is completely object-oriented. YMMV.
+
+=head2 Faster
+
+On my benchmarks, Data::Localize is consistently faster than Locale::Maketext
+by 50~80%
+
+=head2 Scalable For Large Amount Of Lexicons
+
+Whereas Locale::Maketext generally stores the lexicons in memory,
+Data::Localize allows you to store this data in alternate storage.
+By default Data::Localize comes with a BerkeleyDB backend.
+
 =head1 BASIC WORKING 
 
 =head2 STRUCTURE
@@ -399,7 +420,7 @@ with thousands and thousands of long messages, this might not be the ideal
 solution. In such cases, you can change where the lexicons get stored
 
     my $loc = Data::Localize->new();
-    $loc->add_namespace(
+    $loc->add_localizer(
         class         => 'Gettext',
         path          => '/path/to/data/*.po'
         storage_class => 'BerkeleyDB',
