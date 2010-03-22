@@ -14,6 +14,18 @@ has _namespaces => (
     init_arg => 'namespaces',
 );
 
+has _loaded_classes => (
+    is => 'ro',
+    isa => 'HashRef',
+    default => sub { +{} }
+);
+
+has _failed_classes => (
+    is => 'ro',
+    isa => 'HashRef',
+    default => sub { +{} }
+);
+
 _alias_and_deprecate lexicon_get => 'get_lexicon';
 
 __PACKAGE__->meta->make_immutable;
@@ -47,20 +59,21 @@ sub register {
     $loc->add_localizer_map('*', $self);
 }
 
-our %LOADED;
-our %LOAD_FAILED;
 sub get_lexicon {
     my ($self, $lang, $id) = @_;
 
     $lang =~ s/-/_/g;
 
+    my $LOADED = $self->_loaded_classes;
+    my $FAILED = $self->_failed_classes;
     foreach my $namespace ($self->namespaces) {
         my $klass = "$namespace\::$lang";
 
-        if ($LOAD_FAILED{ $klass }++) {
+        if ($FAILED->{ $klass }++) {
             if (Data::Localize::DEBUG()) {
                 print STDERR "[Data::Localize::Namespace]: get_lexicon - Already attempted loading $klass and failed. Skipping...\n";
             }
+            next;
         }
 
         if (Data::Localize::DEBUG()) {
@@ -71,7 +84,7 @@ sub get_lexicon {
         # but the class really hasn't been loaded yet.
         no strict 'refs';
         my $first_load = 0;
-        if (! $LOADED{$klass} && ! $LOAD_FAILED{$klass}) {
+        if (! $LOADED->{$klass}) {
             if (defined %{"$klass\::Lexicon"} && defined %{"$klass\::"}) {
                 if (Data::Localize::DEBUG()) {
                     print STDERR "[Data::Localize::Namespace]: get_lexicon - class already loaded\n";
@@ -90,7 +103,7 @@ sub get_lexicon {
                 if ($@) {
                     if (Data::Localize::DEBUG()) {
                         print STDERR "[Data::Localize::Namespace]: get_lexicon - Failed to load $klass: $@\n";
-                        $LOAD_FAILED{$klass}++;
+                        $FAILED->{$klass}++;
                     }
                     next;
                 }
@@ -98,7 +111,7 @@ sub get_lexicon {
             if (Data::Localize::DEBUG()) {
                 print STDERR "[Data::Localize::Namespace]: get_lexicon - setting $klass to already loaded\n";
             }
-            $LOADED{$klass}++;
+            $LOADED->{$klass}++;
             $first_load = 1;
         }
 
