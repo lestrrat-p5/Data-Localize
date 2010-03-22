@@ -15,6 +15,8 @@ test_requires 'Test::Requires';
 
 no_index directory => 't/lib';
 
+author_tests 'xt';
+
 auto_include_deps;
 no_index directory => 'tools';
 
