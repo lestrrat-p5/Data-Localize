@@ -4,7 +4,18 @@ Changes
 0.00013
   * Change all_* accessors back to what they were in 0.00011
   * Separate out BerkeleyDB tests, fix them
-  * 
+  * DEPRECATION WARNING!
+    - Gettext.pm
+        * path_add        -> add_path
+        * lexicon_get     -> get_lexicon
+        * lexicon_set     -> set_lexicon
+        * lexicon_merge   -> merge_lexicon
+        * lexicon_map_get -> get_lexicon_map
+        * lexicon_map_set -> set_lexicon_map
+    - Namespace.pm
+        * lexicon_get     -> get_lexicon
+    - Auto.pm
+        * lexicon_get     -> get_lexicon
 
 0.00012 22 Mar 2010
   * Remove the use of AttributeHelpers -- doing this in Moose/Mouse is a pain
