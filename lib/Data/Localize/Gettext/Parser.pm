@@ -1,24 +1,27 @@
 package Data::Localize::Gettext::Parser;
 use Any::Moose;
-use namespace::autoclean;
 
-has 'encoding' => (
+has encoding => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
 );
 
-has 'use_fuzzy' => (
+has use_fuzzy => (
     is       => 'ro',
     isa      => 'Bool',
     required => 1,
 );
 
-has 'keep_empty' => (
+has keep_empty => (
     is       => 'ro',
     isa      => 'Bool',
     required => 1,
 );
+
+no Any::Moose;
+
+__PACKAGE__->meta->make_immutable();
 
 sub parse_file {
     my ($self, $file) = @_;
@@ -92,3 +95,23 @@ sub _process_block {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Data::Localize::Gettext::Parser - .po Parser 
+
+=head1 SYNOPSIS
+
+    use Data::Localize::Gettext::Parser;
+    my $p = Data::Localize::Gettext::Parser->new();
+    my $lexicons = $p->parse_file( $file );
+
+=head1 METHODS
+
+=head2 parse_file( $file )
+
+Parses a .po file, and returns the lexicons that are defined
+
+=cut
