@@ -1,7 +1,7 @@
 Changes
 =======
 
-0.00013
+0.00013 23 Mar 2010
   * Change all_* accessors back to what they were in 0.00011
   * Separate out BerkeleyDB tests, fix them
   * Namespace.pm no longer attempts to load files which failed to
