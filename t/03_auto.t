@@ -2,7 +2,7 @@
 use strict;
 use lib "t/lib";
 use Test::More (tests => 4);
-use Test::Data::Localize;
+use t::Data::Localize::Test;
 
 use_ok "Data::Localize";
 

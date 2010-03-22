@@ -3,7 +3,7 @@ use lib "t/lib";
 use utf8;
 use Test::More tests => 3;
 use Test::Requires;
-use Test::Data::Localize qw(write_po);
+use t::Data::Localize::Test qw(write_po);
 
 use_ok "Data::Localize";
 
@@ -13,7 +13,7 @@ test_requires 'BerkeleyDB';
     my $loc = Data::Localize->new(auto => 0, languages => [ 'ja' ]);
     $loc->add_localizer(
         class => 'Gettext',
-        path => 't/lib/Test/Data/Localize/Gettext/*.po',
+        path => 't/04_gettext/*.po',
         storage_class => 'BerkeleyDB'
     );
     my $out = $loc->localize('Hello, stranger!', '牧大輔');

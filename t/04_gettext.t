@@ -2,7 +2,8 @@ use strict;
 use lib "t/lib";
 use utf8;
 use Test::More tests => 14;
-use Test::Data::Localize qw(write_po);
+use File::Spec;
+use t::Data::Localize::Test qw(write_po);
 
 {
     my $tb = Test::Builder->new();
@@ -15,12 +16,12 @@ use_ok "Data::Localize::Gettext";
 
 {
     my $loc = Data::Localize::Gettext->new(
-        path => 't/lib/Test/Data/Localize/Gettext/*.po'
+        path => 't/04_gettext/*.po',
     );
 
     is_deeply(
         $loc->paths,
-        ['t/lib/Test/Data/Localize/Gettext/*.po'],
+        [ 't/04_gettext/*.po' ],
         'paths contains single glob value in t/lib - BUILDARGS handles path argument correctly'
     );
 
@@ -36,7 +37,7 @@ use_ok "Data::Localize::Gettext";
     my $loc = Data::Localize->new(auto => 0, languages => [ 'ja' ]);
     $loc->add_localizer(
         class => 'Gettext',
-        path => 't/lib/Test/Data/Localize/Gettext/*.po'
+        path => 't/04_gettext/*.po'
     );
     my $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、こんにちは!', q{translation for "Hello, stranger!"});
@@ -50,7 +51,7 @@ EOM
 
     is_deeply(
         $loc->localizers->[0]->paths,
-        [ 't/lib/Test/Data/Localize/Gettext/*.po', $file ],
+        [ 't/04_gettext/*.po', $file ],
         'paths contains newly added path'
     );
 
@@ -70,7 +71,7 @@ EOM
         }
     );
     my $loc = $class->name->new(
-        path => 't/lib/Test/Data/Localize/Gettext/*.po'
+        path => 't/04_gettext/*.po'
     );
     my $out = $loc->localize_for(
         lang => 'ja',
