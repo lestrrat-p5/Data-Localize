@@ -3,6 +3,7 @@ package Data::Localize::Localizer;
 use utf8;
 use Any::Moose '::Role';
 use Any::Moose '::Util::TypeConstraints';
+use Carp ();
 
 requires 'register', 'lexicon_get';
 
@@ -48,7 +49,7 @@ sub format_string {
                 @args[ map { (/^_(-?\d+)$/ ? $1 : $_) - 1 } @vars ];
         |gex;
     } else {
-        confess "Unknown style: $style";
+        Carp::confess("Unknown style: $style");
     }
     return $value;
 }

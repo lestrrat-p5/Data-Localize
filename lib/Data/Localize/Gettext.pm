@@ -2,6 +2,7 @@
 package Data::Localize::Gettext;
 use utf8;
 use Any::Moose;
+use Carp ();
 use Data::Localize::Gettext::Parser;
 use File::Basename ();
 use File::Spec;
@@ -151,7 +152,7 @@ sub _method {
     my @embedded_args = split /,/, $embedded;
     my $code = $self->can($method);
     if (! $code) {
-        confess(blessed $self . " does not implement method $method");
+        Carp::confess(blessed $self . " does not implement method $method");
     }
     return $code->($self, $args, \@embedded_args );
 }

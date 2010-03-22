@@ -2,6 +2,7 @@ package Data::Localize::Storage::BerkeleyDB;
 use Any::Moose;
 use Any::Moose 'Util::TypeConstraints';
 use BerkeleyDB;
+use Carp ();
 use Encode ();
 
 with 'Data::Localize::Storage';
@@ -24,7 +25,7 @@ sub BUILD {
         }
         Any::Moose::load_class($class);
         $self->_db( $class->new( $args->{bdb_args} || {} ) ||
-            confess "Failed to create $class: $BerkeleyDB::Error"
+            Carp::confess("Failed to create $class: $BerkeleyDB::Error")
         );
     }
     $self;
@@ -45,7 +46,7 @@ sub set {
     my ($self, $key, $value, $flags) = @_;
     my $rc = $self->_db->db_put($key, $value, $flags || 0);
     if ($rc != 0) {
-        confess "Failed to set value $key";
+        Carp::confess("Failed to set value $key");
     }
 }
 
