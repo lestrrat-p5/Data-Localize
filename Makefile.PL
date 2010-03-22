@@ -11,7 +11,7 @@ requires_any_moose 'mouse' => '0.19';
 
 recommends 'BerkeleyDB';
 
-test_requries 'Test::More' => 0.94;
+test_requires 'Test::More' => 0.94;
 test_requires 'Test::Requires';
 
 no_index directory => 't/lib';
