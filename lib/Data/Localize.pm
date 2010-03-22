@@ -77,11 +77,12 @@ coerce 'Data::Localize::LocalizerListArg'
     }
 ;
 
-has localizers => (
-    is => 'ro',
+has _localizers => (
+    is => 'rw',
     isa => 'Data::Localize::LocalizerListArg',
     coerce => 1,
     default => sub { +[] },
+    init_arg => 'localizers',
 );
 
 has localizer_map => (
@@ -98,7 +99,7 @@ no Any::Moose '::Util::TypeConstraints';
 sub BUILD {
     my $self = shift;
     if ($self->count_localizers > 0) {
-        foreach my $loc (@{ $self->localizers }) {
+        foreach my $loc (@{ $self->_localizers }) {
             $loc->register($self);
         }
     }
@@ -118,11 +119,6 @@ sub _build_auto_localizer {
     my $self = shift;
     require Data::Localize::Auto;
     Data::Localize::Auto->new( style => $self->auto_style );
-}
-
-sub add_languages {
-    my $self = shift;
-    push @{$self->_languages}, @_;
 }
 
 sub set_languages {
@@ -146,19 +142,19 @@ sub languages {
     return @{$self->_languages};
 }
 
-sub push_localizers {
+sub localizers {
     my $self = shift;
-    push @{$self->localizers}, @_;
+    return $self->_localizers;
 }
 
 sub count_localizers {
     my $self = shift;
-    return scalar @{$self->localizers};
+    return scalar @{$self->_localizers};
 }
 
 sub grep_localizers {
     my ($self, $cb) = @_;
-    grep { $cb->($_) } @{$self->localizers};
+    grep { $cb->($_) } @{$self->_localizers};
 }
 
 sub get_localizer_from_lang {
@@ -264,7 +260,7 @@ sub add_localizer {
     }
 
     $localizer->register($self);
-    $self->push_localizers($localizer);
+    push @{ $self->_localizers }, $localizer;
 }
 
 sub find_localizers {
@@ -461,7 +457,15 @@ I18N::LanguageTags::Detect for details.
 
 Detects the language from the given header value, or from HTTP_ACCEPT_LANGUAGES environment variable
 
+=head2 localizers
+
+Return a arrayref of localizers
+
 =head2 add_localizer_map
+
+Used internally.
+
+=head2 set_localizer_map
 
 Used internally.
 
@@ -475,6 +479,28 @@ Finds a localizer by its attribute. Currently only supports isa
 
 If used without any arguments, calls detect_languages() and sets the
 current language set to the result of detect_languages().
+
+=head2 languages
+
+Getht the current list of languages
+
+=head2 add_fallback_languages
+
+=head2 fallback_languages
+
+XXX - Consider if fallback_languages can be removed
+
+=head2 count_localizers()
+
+Return the number of localizers available
+
+=head2 get_localizer_from_lang($lang)
+
+Get appropriate localizer for language $lang
+
+=head2 grep_localizers(\&sub)
+
+Filter localizers
 
 =head1 TODO
 

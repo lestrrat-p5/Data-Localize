@@ -41,7 +41,7 @@ msgid "Hello, stranger!"
 msgstr "%1さん、おじゃまんぼう！"
 EOM
 
-    $loc->localizers->[0]->path_add($file);
+    $loc->localizers->[0]->add_path($file);
 
     is_deeply(
         $loc->localizers->[0]->paths,

@@ -3,6 +3,7 @@ package Data::Localize::Namespace;
 use Any::Moose;
 use Module::Pluggable::Object;
 use Encode ();
+use Data::Localize::Util qw(_alias_and_deprecate);
 
 with 'Data::Localize::Localizer';
 
@@ -12,6 +13,8 @@ has _namespaces => (
     default => sub { [] },
     init_arg => 'namespaces',
 );
+
+_alias_and_deprecate lexicon_get => 'get_lexicon';
 
 __PACKAGE__->meta->make_immutable;
 
@@ -46,7 +49,7 @@ sub register {
 
 our %LOADED;
 our %LOAD_FAILED;
-sub lexicon_get {
+sub get_lexicon {
     my ($self, $lang, $id) = @_;
 
     $lang =~ s/-/_/g;
@@ -56,12 +59,12 @@ sub lexicon_get {
 
         if ($LOAD_FAILED{ $klass }++) {
             if (Data::Localize::DEBUG()) {
-                print STDERR "[Data::Localize::Namespace]: lexicon_get - Already attempted loading $klass and failed. Skipping...\n";
+                print STDERR "[Data::Localize::Namespace]: get_lexicon - Already attempted loading $klass and failed. Skipping...\n";
             }
         }
 
         if (Data::Localize::DEBUG()) {
-            print STDERR "[Data::Localize::Namespace]: lexicon_get - Trying $klass\n";
+            print STDERR "[Data::Localize::Namespace]: get_lexicon - Trying $klass\n";
         }
 
         # Catch the very weird case where is_class_loaded() returns true
@@ -71,11 +74,11 @@ sub lexicon_get {
         if (! $LOADED{$klass}) {
             if (defined %{"$klass\::Lexicon"} && defined %{"$klass\::"}) {
                 if (Data::Localize::DEBUG()) {
-                    print STDERR "[Data::Localize::Namespace]: lexicon_get - class already loaded\n";
+                    print STDERR "[Data::Localize::Namespace]: get_lexicon - class already loaded\n";
                 }
             } else {
                 if (Data::Localize::DEBUG()) {
-                    print STDERR "[Data::Localize::Namespace]: lexicon_get - loading $klass\n";
+                    print STDERR "[Data::Localize::Namespace]: get_lexicon - loading $klass\n";
                 }
 
                 my $code = 
@@ -86,14 +89,14 @@ sub lexicon_get {
                 eval($code);
                 if ($@) {
                     if (Data::Localize::DEBUG()) {
-                        print STDERR "[Data::Localize::Namespace]: lexicon_get - Failed to load $klass: $@\n";
+                        print STDERR "[Data::Localize::Namespace]: get_lexicon - Failed to load $klass: $@\n";
                         $LOAD_FAILED{$klass}++;
                     }
                     next;
                 }
             }
             if (Data::Localize::DEBUG()) {
-                print STDERR "[Data::Localize::Namespace]: lexicon_get - setting $klass to already loaded\n";
+                print STDERR "[Data::Localize::Namespace]: get_lexicon - setting $klass to already loaded\n";
             }
             $LOADED{$klass}++;
             $first_load = 1;
@@ -155,14 +158,23 @@ Data::Localize::Namespace - Acquire Lexicons From Module %Lexicon Hash
 
 =head1 METHODS
 
-=head2 register
+=head2 add_namespaces
 
-Registeres this localizer to the Data::Localize object
+Add a new namespace to the END of the namespace list
 
-=head2 lexicon_get 
+=head2 get_lexicon 
 
 Looks up lexicon data from given namespaces. Packages must be discoverable
 via Module::Pluggable::Object, with a package name like YourNamespace::lang
+
+=head2 namespaces
+
+Get all the namespaces that this localizer will look up, in the order that
+they will be looked up.
+
+=head2 register
+
+Registeres this localizer to the Data::Localize object
 
 =head1 AUTHOR
 

@@ -5,7 +5,7 @@ use Any::Moose '::Role';
 use Any::Moose '::Util::TypeConstraints';
 use Carp ();
 
-requires 'register', 'lexicon_get';
+requires 'register', 'get_lexicon';
 
 has 'style' => (
     is => 'ro',
@@ -20,7 +20,7 @@ sub localize_for {
     my ($self, %args) = @_;
     my ($lang, $id, $args) = @args{ qw(lang id args) };
 
-    my $value = $self->lexicon_get($lang, $id) or return ();
+    my $value = $self->get_lexicon($lang, $id) or return ();
     if (Data::Localize::DEBUG()) {
         print STDERR "[Data::Localize::Localizer]: localize_for - $id -> ",
             defined($value) ? $value : '(null)', "\n";

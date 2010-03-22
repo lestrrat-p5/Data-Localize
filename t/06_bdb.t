@@ -24,7 +24,7 @@ msgid "Hello, stranger!"
 msgstr "%1さん、おじゃまんぼう！"
 EOM
 
-    $loc->localizers->[0]->path_add($file);
+    $loc->localizers->[0]->add_path($file);
     $out = $loc->localize('Hello, stranger!', '牧大輔');
     is($out, '牧大輔さん、おじゃまんぼう！', q{translation for "Hello, stranger!" from new file after BerkeleyDB});
 
