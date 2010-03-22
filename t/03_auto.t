@@ -1,6 +1,4 @@
-
 use strict;
-use lib "t/lib";
 use Test::More (tests => 4);
 use t::Data::Localize::Test;
 

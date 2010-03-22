@@ -1,5 +1,4 @@
 use strict;
-use lib "t/lib";
 use utf8;
 use Test::More tests => 8;
 use File::Spec;
@@ -16,7 +15,7 @@ use_ok "Data::Localize::Gettext";
     is_deeply(
         $loc->paths,
         [ 't/04_gettext/*.po' ],
-        'paths contains single glob value in t/lib - BUILDARGS handles path argument correctly'
+        'paths contains single glob value in t/04_gettext/ - BUILDARGS handles path argument correctly'
     );
 
     my $out = $loc->localize_for(

@@ -1,5 +1,4 @@
 use strict;
-use lib "t/lib";
 use utf8;
 use Test::More tests => 6;
 use t::Data::Localize::Test;
