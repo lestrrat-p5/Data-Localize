@@ -25,12 +25,6 @@ has 'paths' => (
     },
 );
 
-sub path_add {
-    my $self = shift;
-    push @{$self->{paths}}, @_;
-    $self->load_from_path($_) for @_;
-}
-
 has 'storage_class' => (
     is => 'rw',
     isa => 'Str',
@@ -50,16 +44,6 @@ has 'lexicon_map' => (
     isa => 'HashRef[Data::Localize::Storage]',
     default => sub { +{} },
 );
-
-sub lexicon_map_get {
-    my ($self, $key) = @_;
-    return $self->lexicon_map->{ $key };
-}
-
-sub lexicon_map_set {
-    my ($self, $key, $value) = @_;
-    return $self->lexicon_map->{ $key } = $value;
-}
 
 has 'use_fuzzy' => (
     is => 'ro',
@@ -86,6 +70,22 @@ sub BUILDARGS {
         push @{$args{paths}}, $path;
     }
     $class->SUPER::BUILDARGS(%args, style => 'gettext');
+}
+
+sub path_add {
+    my $self = shift;
+    push @{$self->{paths}}, @_;
+    $self->load_from_path($_) for @_;
+}
+
+sub lexicon_map_get {
+    my ($self, $key) = @_;
+    return $self->lexicon_map->{ $key };
+}
+
+sub lexicon_map_set {
+    my ($self, $key, $value) = @_;
+    return $self->lexicon_map->{ $key } = $value;
 }
 
 sub register {
