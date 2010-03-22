@@ -92,10 +92,6 @@ has localizer_map => (
     is => 'ro',
     isa => 'HashRef',
     default => sub { +{} },
-    provides => {
-        get => 'get_localizer_from_lang',
-        set => 'set_localizer_map',
-    }
 );
 
 __PACKAGE__->meta->make_immutable;
