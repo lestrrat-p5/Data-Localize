@@ -25,6 +25,24 @@ $loc->add_localizer(
 );
 $loc->languages(['en']);
 
+my $loc_gettext = Data::Localize->new;
+$loc_gettext->add_localizer(
+    class => 'Gettext',
+    paths => [ 'tools/benchmark/gettext/*.po' ],
+);
+$loc_gettext->languages(['en']);
+
+my $loc_gettext_bdb = Data::Localize->new;
+$loc_gettext_bdb->add_localizer(
+    class => 'Gettext',
+    paths => [ 'tools/benchmark/gettext/*.po' ],
+    storage_class => 'BerkeleyDB',
+    storage_args => {
+        dir => 'tools/benchmark'
+    }
+);
+$loc_gettext_bdb->languages(['en']);
+
 cmpthese(30_000, {
     locale_maketext => sub {
         my $handle = LM->get_handle('en');
@@ -32,5 +50,11 @@ cmpthese(30_000, {
     },
     data_localize => sub {
         $loc->localize('Hello, [_1]', 'John Doe');
-    }
+    },
+    data_localize_gettext => sub {
+        $loc_gettext->localize('Hello, [_1]', 'John Doe');
+    },
+    data_localize_gettext_bdb => sub {
+        $loc_gettext_bdb->localize('Hello, [_1]', 'John Doe');
+    },
 });
