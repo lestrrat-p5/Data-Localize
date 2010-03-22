@@ -12,13 +12,13 @@ use Data::Localize::Storage::Hash;
 
 with 'Data::Localize::Localizer';
 
-has 'encoding' => (
+has encoding => (
     is => 'ro',
     isa => 'Str',
     default => 'utf-8',
 );
 
-has 'paths' => (
+has paths => (
     is => 'ro',
     isa => 'ArrayRef',
     trigger => sub {
@@ -27,7 +27,7 @@ has 'paths' => (
     },
 );
 
-has 'storage_class' => (
+has storage_class => (
     is => 'ro',
     isa => 'Str',
     default => sub {
@@ -35,31 +35,46 @@ has 'storage_class' => (
     }
 );
 
-has 'storage_args' => (
+has storage_args => (
     is => 'ro',
     isa => 'HashRef',
     default => sub { +{} }
 );
 
-has 'lexicon_map' => (
+has lexicon_map => (
     is => 'ro',
     isa => 'HashRef[Data::Localize::Storage]',
     default => sub { +{} },
 );
 
-has 'use_fuzzy' => (
+has use_fuzzy => (
     is => 'ro',
     isa => 'Bool',
     default => 0,
 );
 
-has 'allow_empty' => (
+has allow_empty => (
     is => 'ro',
     isa => 'Bool',
     default => 0,
+);
+
+has _parser => (
+    is => 'ro',
+    isa => 'Data::Localize::Gettext::Parser',
+    lazy_build => 1,
 );
 
 no Any::Moose;
+
+sub _build__parser {
+    my $self = shift;
+    return Data::Localize::Gettext::Parser->new(
+        use_fuzzy  => $self->use_fuzzy(),
+        keep_empty => $self->allow_empty(),
+        encoding   => $self->encoding(),
+    );
+}
 
 sub BUILDARGS {
     my ($class, %args) = @_;
@@ -114,13 +129,7 @@ sub load_from_file {
         print STDERR "[Data::Localize::Gettext]: load_from_file - loading from file $file\n"
     }
 
-    my $parser = Data::Localize::Gettext::Parser->new(
-        use_fuzzy  => $self->use_fuzzy(),
-        keep_empty => $self->allow_empty(),
-        encoding   => $self->encoding(),
-    );
-
-    my $lexicon = $parser->parse_file($file);
+    my $lexicon = $self->_parser->parse_file($file);
 
     my $lang = File::Basename::basename($file);
     $lang =~ s/\.[mp]o$//;
