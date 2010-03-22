@@ -1,4 +1,3 @@
-# $Id: Namespace.pm 32372 2009-04-14 06:21:48Z daisuke $
 
 package Data::Localize::Namespace;
 use Any::Moose;

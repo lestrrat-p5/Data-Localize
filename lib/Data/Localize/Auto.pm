@@ -1,4 +1,3 @@
-# $Id: Auto.pm 31768 2009-04-01 01:39:18Z daisuke $
 
 package Data::Localize::Auto;
 use Any::Moose;

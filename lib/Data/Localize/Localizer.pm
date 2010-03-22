@@ -1,4 +1,3 @@
-# $Id: Localizer.pm 31762 2009-04-01 01:14:35Z daisuke $
 
 package Data::Localize::Localizer;
 use utf8;
@@ -12,6 +11,9 @@ has 'style' => (
     isa => enum([qw(gettext maketext)]),
     default => 'maketext',
 );
+
+no Any::Moose '::Role';
+no Any::Moose '::Util::TypeConstraints';
 
 sub localize_for {
     my ($self, %args) = @_;
@@ -50,9 +52,6 @@ sub format_string {
     }
     return $value;
 }
-
-no Any::Moose '::Role';
-no Any::Moose '::Util::TypeConstraints';
 
 1;
 
