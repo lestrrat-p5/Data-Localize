@@ -164,10 +164,10 @@ sub get_lexicon {
 
 sub set_lexicon {
     my ($self, $lang, $id, $value) = @_;
-    my $lexicon = $self->lexicon_map_get($lang);
+    my $lexicon = $self->get_lexicon_map($lang);
     if (! $lexicon) {
         $lexicon = $self->build_storage();
-        $self->lexicon_map_set($lang, $lexicon);
+        $self->set_lexicon_map($lang, $lexicon);
     }
     $lexicon->set($id, $value);
 }
@@ -178,7 +178,7 @@ sub merge_lexicon {
     my $lexicon = $self->get_lexicon_map($lang);
     if (! $lexicon) {
         $lexicon = $self->_build_storage($lang);
-        $self->lexicon_map_set($lang, $lexicon);
+        $self->set_lexicon_map($lang, $lexicon);
     }
     while (my ($key, $value) = each %$new_lexicon) {
         $lexicon->set($key, $value);
