@@ -1,11 +1,9 @@
 use strict;
 use utf8;
 use Test::More tests => 1;
-use Test::Requires;
+use Test::Requires qw(HTML::FormFu CGI);
 use Data::Localize;
 
-test_requires 'HTML::FormFu';
-test_requires 'CGI';
 
 my $cgi = CGI->new({
     submit => 'submit'
