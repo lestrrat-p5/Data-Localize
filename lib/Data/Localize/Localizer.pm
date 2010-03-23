@@ -2,19 +2,24 @@
 package Data::Localize::Localizer;
 use utf8;
 use Any::Moose '::Role';
-use Any::Moose '::Util::TypeConstraints';
 use Carp ();
 
 requires 'register', 'get_lexicon';
 
-has 'style' => (
+has formatter => (
     is => 'ro',
-    isa => enum([qw(gettext maketext)]),
-    default => 'maketext',
+    isa => 'Data::Localize::Format',
+    required => 1,
+    lazy_build => 1,
+    handles => { format_string => 'format' },
 );
 
 no Any::Moose '::Role';
-no Any::Moose '::Util::TypeConstraints';
+
+sub _build_formatter {
+    Any::Moose::load_class('Data::Localize::Format::Maketext');
+    return Data::Localize::Format::Maketext->new();
+}
 
 sub localize_for {
     my ($self, %args) = @_;
@@ -27,31 +32,6 @@ sub localize_for {
     }
     return $self->format_string($value, @$args) if $value;
     return ();
-}
-
-sub format_string {
-    my ($self, $value, @args) = @_;
-
-    my $style = $self->style;
-    if ($style eq 'gettext') {
-        $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
-    } elsif ($style eq 'maketext') {
-        $value =~ s|\[([^\]]+)\]|
-            my @vars = split(/,/, $1);
-            my $method;
-            if ($vars[0] !~ /^_(-?\d+)$/) {
-                $method = shift @vars;
-            }
-
-
-            ($method) ?
-                $self->$method( map { (/^_(-?\d+)$/) ? $args[$1 - 1] : $_; } @args ) :
-                @args[ map { (/^_(-?\d+)$/ ? $1 : $_) - 1 } @vars ];
-        |gex;
-    } else {
-        Carp::confess("Unknown style: $style");
-    }
-    return $value;
 }
 
 1;

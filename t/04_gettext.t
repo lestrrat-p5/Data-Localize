@@ -54,17 +54,18 @@ EOM
 }
 
 {
-    my $class = Data::Localize::Gettext->meta->create_anon_class(
-        superclasses => [ 'Data::Localize::Gettext' ],
-        methods      => {
-            test => sub {
-                my ($self, $args, $embedded) = @_;
-                return join(':', @$args, @$embedded);
+    require Data::Localize::Format::Gettext;
+    my $loc = Data::Localize::Gettext->new(
+        path => 't/04_gettext/*.po',
+        formatter => Data::Localize::Format::Gettext->meta->create_anon_class(
+            superclasses => [ 'Data::Localize::Format::Gettext' ],
+            methods      => {
+                test => sub {
+                    my ($self, $args, $embedded) = @_;
+                    return join(':', @$args, @$embedded);
+                }
             }
-        }
-    );
-    my $loc = $class->name->new(
-        path => 't/04_gettext/*.po'
+        )->new_object()
     );
     my $out = $loc->localize_for(
         lang => 'ja',
