@@ -24,12 +24,6 @@ has auto => (
     default => 1,
 );
 
-has auto_style => (
-    is => 'ro',
-    isa => 'Str',
-    default => 'maketext'
-);
-
 has auto_localizer => (
     is => 'ro',
     isa => 'Data::Localize::Auto',
@@ -118,7 +112,7 @@ sub _build__languages {
 sub _build_auto_localizer {
     my $self = shift;
     require Data::Localize::Auto;
-    Data::Localize::Auto->new( style => $self->auto_style );
+    Data::Localize::Auto->new();
 }
 
 sub set_languages {
