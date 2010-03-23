@@ -84,7 +84,7 @@ sub BUILDARGS {
         $args{paths} ||= [];
         push @{$args{paths}}, $path;
     }
-    $class->SUPER::BUILDARGS(%args, style => 'gettext');
+    $class->SUPER::BUILDARGS(%args);
 }
 
 sub _build_formatter {
