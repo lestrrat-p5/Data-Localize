@@ -87,6 +87,11 @@ sub BUILDARGS {
     $class->SUPER::BUILDARGS(%args, style => 'gettext');
 }
 
+sub _build_formatter {
+    Any::Moose::load_class( 'Data::Localize::Format::Gettext' );
+    return Data::Localize::Format::Gettext->new();
+}
+
 sub add_path {
     my $self = shift;
     push @{$self->paths}, @_;
@@ -141,27 +146,6 @@ sub load_from_file {
 
     # This needs to be merged
     $self->merge_lexicon($lang, $lexicon);
-}
-
-sub format_string {
-    my ($self, $value, @args) = @_;
-    $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
-    $value =~ s/%(\w+)\(([^\)]+)\)/
-        $self->_method( $1, $2, \@args )
-    /gex;
-
-    return $value;
-}
-
-sub _method {
-    my ($self, $method, $embedded, $args) = @_;
-
-    my @embedded_args = split /,/, $embedded;
-    my $code = $self->can($method);
-    if (! $code) {
-        Carp::confess(blessed $self . " does not implement method $method");
-    }
-    return $code->($self, $args, \@embedded_args );
 }
 
 sub get_lexicon {
