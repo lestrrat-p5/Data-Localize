@@ -152,7 +152,7 @@ Data::Localize::Namespace - Acquire Lexicons From Module %Lexicon Hash
    package MyApp::I18N::ja;
    use strict;
    our %Lexicon = (
-      "Hello, %1!" => "%1さん、こんにちは!"
+      "Greeting" => "[_1]さん、こんにちは!"
    );
 
    1;
@@ -160,12 +160,11 @@ Data::Localize::Namespace - Acquire Lexicons From Module %Lexicon Hash
    use Data::Localize;
 
    my $loc = Data::Localize::Namespace->new(
-      style => "gettext",
       namespace => "MyApp::I18N",
    );
    my $out = $loc->localize_for(
       lang => 'ja',
-      id   => 'Hello, %1!',
+      id   => 'Greeting',
       args => [ 'John Doe' ]
    );
 
