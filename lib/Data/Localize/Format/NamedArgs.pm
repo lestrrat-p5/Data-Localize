@@ -17,3 +17,20 @@ sub format {
 __PACKAGE__->meta->make_immutable();
 
 1;
+
+__END__
+
+=head1 NAME
+
+Data::Localize::Format::NamedArgs - Process Lexicons With Named Args
+
+=head1 SYNOPSIS
+
+    # "Hello {{name}}" -> "Hello, John"
+    $loc->localize( "lexicon_key", { name => "John" } );
+
+=head1 METHODS
+
+=head2 format
+
+=cut

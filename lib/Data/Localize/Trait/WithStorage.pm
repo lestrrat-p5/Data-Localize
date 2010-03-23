@@ -99,3 +99,32 @@ _alias_and_deprecate lexicon_merge => 'merge_lexicon';
 
 1;
 
+__END__
+
+=head1 NAME
+
+Data::Localize::Trait::WithStorage - Localizer With Configurable Storage
+
+=head1 METHODS
+
+=head2 get_lexicon($lang, $id)
+
+Gets the specified lexicon
+
+=head2 set_lexicon($lang, $id, $value)
+
+Sets the specified lexicon
+
+=head2 merge_lexicon
+
+Merges lexicon (may change...)
+
+=head2 get_lexicon_map($lang)
+
+Get the lexicon map for language $lang
+
+=head2 set_lexicon_map($lang, \%lexicons)
+
+Set the lexicon map for language $lang
+
+=cut
