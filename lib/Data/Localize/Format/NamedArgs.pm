@@ -8,7 +8,7 @@ no Any::Moose;
 sub format {
     my ($self, $value, $args) = @_;
 
-    return unless ref $args eq 'HASH';
+    return $value unless ref $args eq 'HASH';
 
     $value =~ s/{{([^}]+)}}/ $args->{ $1 } || '' /ex;
     return $value;
