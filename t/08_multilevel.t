@@ -2,10 +2,7 @@
 use strict;
 use utf8;
 use Test::More tests => 11;
-use Test::Requires;
-
-test_requires 'YAML::XS';
-test_requires 'Config::Any';
+use Test::Requires qw( YAML::XS Config::Any );
 
 use_ok "Data::Localize";
 
