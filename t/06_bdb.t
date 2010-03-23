@@ -1,14 +1,12 @@
 use strict;
-use lib "t/lib";
 use utf8;
 use Test::More tests => 3;
 use Test::Requires;
 use t::Data::Localize::Test qw(write_po);
 
-use_ok "Data::Localize";
-
 test_requires 'BerkeleyDB';
 
+use_ok "Data::Localize";
 {
     my $loc = Data::Localize->new(auto => 0, languages => [ 'ja' ]);
     $loc->add_localizer(
