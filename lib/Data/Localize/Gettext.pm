@@ -4,9 +4,7 @@ use utf8;
 use Any::Moose;
 use Carp ();
 use Data::Localize::Gettext::Parser;
-use File::Basename ();
-use File::Spec;
-use File::Temp qw(tempdir);
+use File::Temp ();
 use Data::Localize::Util qw(_alias_and_deprecate);
 use Data::Localize::Storage::Hash;
 
@@ -191,7 +189,7 @@ sub _build_storage {
     Any::Moose::load_class($class);
 
     if ( $class->isa('Data::Localize::Storage::BerkeleyDB') ) {
-        my $dir  = ($args->{dir} ||= tempdir(CLEANUP => 1));
+        my $dir  = ($args->{dir} ||= File::Temp::tempdir(CLEANUP => 1));
         return $class->new(
             bdb_class => 'Hash',
             bdb_args  => {
@@ -205,11 +203,6 @@ sub _build_storage {
 }
 
 _alias_and_deprecate path_add => 'add_path';
-_alias_and_deprecate lexicon_map_get => 'get_lexicon_map';
-_alias_and_deprecate lexicon_map_set => 'set_lexicon_map';
-_alias_and_deprecate lexicon_get => 'get_lexicon';
-_alias_and_deprecate lexicon_set => 'set_lexicon';
-_alias_and_deprecate lexicon_merge => 'merge_lexicon';
 
 __PACKAGE__->meta->make_immutable;
 
