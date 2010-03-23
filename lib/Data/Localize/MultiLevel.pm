@@ -2,8 +2,8 @@ package Data::Localize::MultiLevel;
 use Any::Moose;
 use Config::Any;
 
-with 'Data::Localize::Localizer',
-    'Data::Localize::Trait::WithStorage' => {
+extends 'Data::Localize::Localizer';
+with 'Data::Localize::Trait::WithStorage' => {
         -exclude => [ qw(get_lexicon set_lexicon) ],
     },
 ;
@@ -17,16 +17,18 @@ has paths => (
     },
 );
 
+after register => sub {
+    my ($self, $loc) = @_;
+    $loc->add_localizer_map('*', $self);
+    $loc->add_localizer_map( $_, $self )
+        for keys %{ $self->lexicon_map }
+};
+
 no Any::Moose;
 
 sub _build_formatter {
     Any::Moose::load_class('Data::Localize::Format::NamedArgs');
     return Data::Localize::Format::NamedArgs->new();
-}
-
-sub register {
-    my ($self, $loc) = @_;
-    $loc->add_localizer_map('*', $self);
 }
 
 sub load_from_path {
@@ -48,6 +50,7 @@ sub load_from_path {
             );
         }
         $self->set_lexicon_map( $lang, $lexicons->{$lang} );
+        $self->_localizer->add_localizer_map($lang, $self) if $self->_localizer;
     }
 }
 
@@ -126,18 +129,32 @@ Data::Localize::MultiLevel - Fetch Data From Multi-Level Data Structures
 
     $loc->add_localizer(
         Data::Localize::MultiLevel->new(
-            path => [ ]
+            paths => [ '/path/to/lexicons/*.yml' ]
         )
     );
 
-    $loc->localize( 'foo.key' );
+    $loc->localize( 'foo.key', { arg => $value, ... } );
 
     # above is internally... 
     $loc->localize_for(
         lang => 'en',
         id => 'foo.key',
+        args => [ { arg => $value } ]
     );
     # which in turn looks up...
-    $lexicons->{foo}->{key};
+    # $lexicons->{foo}->{key};
+
+=head1 DESCRIPTION
+
+Data::Localize::MultiLevel implements a "Rails"-ish I18N facility. Namely
+it uses a multi-level key to lookup data from a hash, and uses the NamedArgs
+
+=head1 METHODS
+
+=head2 get_lexicon
+
+=head2 set_lexicon
+
+=head2 load_from_path
 
 =cut

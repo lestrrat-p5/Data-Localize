@@ -5,7 +5,7 @@ use Module::Pluggable::Object;
 use Encode ();
 use Data::Localize::Util qw(_alias_and_deprecate);
 
-with 'Data::Localize::Localizer';
+extends 'Data::Localize::Localizer';
 
 has _namespaces => (
     is => 'rw',
@@ -26,6 +26,25 @@ has _failed_classes => (
     default => sub { +{} }
 );
 
+override register => sub {
+    my ($self, $loc) = @_;
+    super();
+
+    my $finder = Module::Pluggable::Object->new(
+        'require' => 1,
+        search_path => [ $self->namespaces ]
+    );
+
+    # find the languages that we currently support
+    my $re = join('|', $self->namespaces);
+    foreach my $plugin ($finder->plugins) {
+        $plugin =~ s/^(?:$re):://;
+        $plugin =~ s/::/_/g;
+        $loc->add_localizer_map($plugin, $self);
+    }   
+    $loc->add_localizer_map('*', $self);
+};
+
 _alias_and_deprecate lexicon_get => 'get_lexicon';
 
 __PACKAGE__->meta->make_immutable;
@@ -40,23 +59,6 @@ sub add_namespaces {
 sub namespaces {
     my $self = shift;
     return @{ $self->_namespaces };
-}
-
-sub register {
-    my ($self, $loc) = @_;
-    my $finder = Module::Pluggable::Object->new(
-        'require' => 1,
-        search_path => [ $self->namespaces ]
-    );
-
-    # find the languages that we currently support
-    my $re = join('|', $self->namespaces);
-    foreach my $plugin ($finder->plugins) {
-        $plugin =~ s/^(?:$re):://;
-        $plugin =~ s/::/_/g;
-        $loc->add_localizer_map($plugin, $self);
-    }   
-    $loc->add_localizer_map('*', $self);
 }
 
 sub get_lexicon {

@@ -8,7 +8,8 @@ use File::Temp ();
 use Data::Localize::Util qw(_alias_and_deprecate);
 use Data::Localize::Storage::Hash;
 
-with 'Data::Localize::Localizer';
+extends 'Data::Localize::Localizer';
+with 'Data::Localize::Trait::WithStorage';
 
 has encoding => (
     is => 'ro',
@@ -23,26 +24,6 @@ has paths => (
         my $self = shift;
         $self->load_from_path($_) for @{$_[0]};
     },
-);
-
-has storage_class => (
-    is => 'ro',
-    isa => 'Str',
-    default => sub {
-        return '+Data::Localize::Storage::Hash';
-    }
-);
-
-has storage_args => (
-    is => 'ro',
-    isa => 'HashRef',
-    default => sub { +{} }
-);
-
-has lexicon_map => (
-    is => 'ro',
-    isa => 'HashRef[Data::Localize::Storage]',
-    default => sub { +{} },
 );
 
 has use_fuzzy => (
@@ -62,6 +43,12 @@ has _parser => (
     isa => 'Data::Localize::Gettext::Parser',
     lazy_build => 1,
 );
+
+override register => sub {
+    my ($self, $loc) = @_;
+    super();
+    $loc->add_localizer_map('*', $self);
+};
 
 no Any::Moose;
 
@@ -106,11 +93,6 @@ sub set_lexicon_map {
     return $self->lexicon_map->{ $key } = $value;
 }
 
-sub register {
-    my ($self, $loc) = @_;
-    $loc->add_localizer_map('*', $self);
-}
-
 sub load_from_path {
     my ($self, $path) = @_;
 
@@ -144,62 +126,6 @@ sub load_from_file {
 
     # This needs to be merged
     $self->merge_lexicon($lang, $lexicon);
-}
-
-sub get_lexicon {
-    my ($self, $lang, $id) = @_;
-    my $lexicon = $self->get_lexicon_map($lang);
-    return () unless $lexicon;
-    $lexicon->get($id);
-}
-
-sub set_lexicon {
-    my ($self, $lang, $id, $value) = @_;
-    my $lexicon = $self->get_lexicon_map($lang);
-    if (! $lexicon) {
-        $lexicon = $self->build_storage();
-        $self->set_lexicon_map($lang, $lexicon);
-    }
-    $lexicon->set($id, $value);
-}
-
-sub merge_lexicon {
-    my ($self, $lang, $new_lexicon) = @_;
-
-    my $lexicon = $self->get_lexicon_map($lang);
-    if (! $lexicon) {
-        $lexicon = $self->_build_storage($lang);
-        $self->set_lexicon_map($lang, $lexicon);
-    }
-    while (my ($key, $value) = each %$new_lexicon) {
-        $lexicon->set($key, $value);
-    }
-}
-
-sub _build_storage {
-    my ($self, $lang) = @_;
-
-    my $class = $self->storage_class;
-    my $args  = $self->storage_args;
-    my %args;
-
-    if ($class !~ s/^\+//) {
-        $class = "Data::Localize::Storage::$class";
-    }
-    Any::Moose::load_class($class);
-
-    if ( $class->isa('Data::Localize::Storage::BerkeleyDB') ) {
-        my $dir  = ($args->{dir} ||= File::Temp::tempdir(CLEANUP => 1));
-        return $class->new(
-            bdb_class => 'Hash',
-            bdb_args  => {
-                -Filename => File::Spec->catfile($dir, $lang),
-                -Flags    => BerkeleyDB::DB_CREATE(),
-            }
-        );
-    } else {
-        return $class->new();
-    }
 }
 
 _alias_and_deprecate path_add => 'add_path';

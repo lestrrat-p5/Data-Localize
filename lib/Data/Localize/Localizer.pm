@@ -1,10 +1,14 @@
 
 package Data::Localize::Localizer;
 use utf8;
-use Any::Moose '::Role';
+use Any::Moose;
 use Carp ();
 
-requires 'register', 'get_lexicon';
+has _localizer => (
+    is => 'rw',
+    isa => 'Data::Localize',
+    weak_ref => 1,
+);
 
 has formatter => (
     is => 'ro',
@@ -14,11 +18,19 @@ has formatter => (
     handles => { format_string => 'format' },
 );
 
-no Any::Moose '::Role';
+no Any::Moose;
 
 sub _build_formatter {
     Any::Moose::load_class('Data::Localize::Format::Maketext');
     return Data::Localize::Format::Maketext->new();
+}
+
+sub register {
+    my ($self, $loc) = @_;
+    if ($self->_localizer) {
+        Carp::confess("Localizer $self is already attached to another Data::Localize object ($loc)");
+    }
+    $self->_localizer( $loc );
 }
 
 sub localize_for {
@@ -34,6 +46,8 @@ sub localize_for {
     return ();
 }
 
+__PACKAGE__->meta->make_immutable();
+
 1;
 
 __END__
@@ -47,11 +61,16 @@ Data::Localize::Localizer - Localizer Role
     package MyLocalizer;
     use Moose;
 
-    with 'Data::Localize::Localizer';
+    extends 'Data::Localize::Localizer';
 
     no Moose;
 
 =head1 METHODS
+
+=head2 register
+
+Does basic registration for the localizer. If you're overriding
+this method, be sure to call the super class' register() method!
 
 =head2 localize_for
 

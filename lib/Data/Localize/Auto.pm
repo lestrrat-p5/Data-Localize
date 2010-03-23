@@ -2,13 +2,11 @@
 package Data::Localize::Auto;
 use Any::Moose;
 
-with 'Data::Localize::Localizer';
+extends 'Data::Localize::Localizer';
 
 __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
-
-sub register {}
 
 sub get_lexicon {}
 
