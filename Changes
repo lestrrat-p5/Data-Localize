@@ -1,6 +1,17 @@
 Changes
 =======
 
+0.00013_01 24 Mar 2010
+  * Added MultiLevel localizer that allows you to write a Rails-ish
+    i18n: $loc->localize('my.key' => {arg => $value});
+  * Fixed tests
+  * BACKWARDS COMPAT BREAKING CHANGE!
+    -> For Data::Localize::Localizer consumers only.
+       End users should see no change.
+    * Data::Localize::Localizer is no longer a role.
+    * 'style' parameter has been deprecated
+    * Message formatting is now pluggable.
+
 0.00013 23 Mar 2010
   * Change all_* accessors back to what they were in 0.00011
   * Separate out BerkeleyDB tests, fix them
