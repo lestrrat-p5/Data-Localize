@@ -54,7 +54,7 @@ __END__
 
 =head1 NAME
 
-Data::Localize::Localizer - Localizer Role
+Data::Localize::Localizer - Localizer Base Class
 
 =head1 SYNOPSIS
 
