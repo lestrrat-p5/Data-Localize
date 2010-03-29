@@ -8,17 +8,25 @@ no Any::Moose;
 sub format {
     my ($self, $lang, $value, @args) = @_;
     $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
-    $value =~ s|%(\w+)\(([^\)]+)\)|
-        my $method = $1;
-        my @embedded_args = split /,/, $2;
-        my $code = $self->can($method);
-        if (! $code) {
-            Carp::confess(Scalar::Util::blessed($self) . " does not implement method '$method'");
-        }
-        $code->($self, $lang, \@args, \@embedded_args);
-    |gex;
+    $value =~ s|%(\w+)\(([^\)]+)\)| $self->_call_method( $lang, $1, $2, \@args ) |gex;
 
     return $value;
+}
+
+sub _call_method {
+    my ($self, $lang, $method, $embedded, $args) = @_;
+
+    my $code = $self->can($method);
+    if (! $code) {
+        Carp::confess(Scalar::Util::blessed($self) . " does not implement method '$method'");
+    }
+
+    my @embedded_args = split /,/, $embedded;
+    for (@embedded_args) {
+        $_ =~ s/%(\d+)/$args->[ $1 - 1 ]/;
+    }
+
+    return $code->($self, $lang, \@embedded_args);
 }
 
 __PACKAGE__->meta->make_immutable();
