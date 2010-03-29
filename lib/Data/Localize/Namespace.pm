@@ -188,7 +188,7 @@ they will be looked up.
 
 =head2 register
 
-Registeres this localizer to the Data::Localize object
+Registers this localizer to the Data::Localize object
 
 =head1 AUTHOR
 

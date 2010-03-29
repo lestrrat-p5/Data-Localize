@@ -52,7 +52,7 @@ subtype 'Data::Localize::LocalizerListArg'
         ! grep { ! blessed $_ || ! $_->does('Data::Localize::Localizer') } @$_;
     }
     => message {
-        'localizers must be a list of Data::Localize::Localizer implementors'
+        'localizers must be a list of Data::Localize::Localizer implementers'
     }
 ;
 coerce 'Data::Localize::LocalizerListArg'
@@ -346,7 +346,7 @@ By default Data::Localize comes with a BerkeleyDB backend.
 =head2 STRUCTURE
 
 Data::Localize is a wrapper around various Data::Localize::Localizer 
-implementors (localizers). So if you don't specify any localizers, 
+implementers (localizers). So if you don't specify any localizers, 
 Data::Localize will do... nothing (unless you specify C<auto>).
 
 Localizers are the objects that do the actual localization. Localizers must
@@ -367,7 +367,7 @@ use it as the actual lexicon, if no other applicable lexicons exists.
 
 Locale::Maketext attaches this to the lexicon hash itself, but Data::Localizer
 differs in that it attaches to the Data::Localizer object itself, so you
-don't have to place _AUTO everwhere.
+don't have to place _AUTO everywhere.
 
     # here, we're deliberately not setting any localizers
     my $loc = Data::Localize->new(auto => 1);
@@ -497,7 +497,7 @@ current language set to the result of detect_languages().
 
 =head2 languages
 
-Getht the current list of languages
+Gets the current list of languages
 
 =head2 add_fallback_languages
 

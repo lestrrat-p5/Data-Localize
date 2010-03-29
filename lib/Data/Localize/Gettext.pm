@@ -182,7 +182,7 @@ Loads lexicons from specified path. May contain glob()'able expressions.
 
 =head2 register
 
-Registeres this localizer
+Registers this localizer
 
 =head2 parse_metadata
 
