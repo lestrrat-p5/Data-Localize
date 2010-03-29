@@ -6,7 +6,7 @@ extends 'Data::Localize::Format';
 no Any::Moose;
 
 sub format {
-    my ($self, $value, $args) = @_;
+    my ($self, $lang, $value, $args) = @_;
 
     return $value unless ref $args eq 'HASH';
 

@@ -19,7 +19,7 @@ sub localize_for {
         print STDERR "[Data::Localize::Auto]: localize_for - $id -> ",
             defined($value) ? $value : '(null)', "\n";
     }
-    return $self->format_string($value, @$args) if $value;
+    return $self->format_string('auto', $value, @$args) if $value;
     return ();
 }
 

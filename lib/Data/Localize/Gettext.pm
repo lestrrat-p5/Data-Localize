@@ -144,7 +144,7 @@ Data::Localize::Gettext - Acquire Lexicons From .po Files
 
 =head1 METHODS
 
-=head2 format_string($value, @args)
+=head2 format_string($lang, $value, @args)
 
 Formats the string
 

@@ -6,7 +6,7 @@ extends 'Data::Localize::Format';
 no Any::Moose;
 
 sub format {
-    my ($self, $value, @args) = @_;
+    my ($self, $lang, $value, @args) = @_;
 
     $value =~ s|\[([^\]]+)\]|
         my @vars = split(/,/, $1);
@@ -16,7 +16,7 @@ sub format {
         }
 
         ($method) ?
-            $self->$method( map { (/^_(-?\d+)$/) ? $args[$1 - 1] : $_; } @args ) :
+            $self->$method( $lang, map { (/^_(-?\d+)$/) ? $args[$1 - 1] : $_; } @args ) :
             @args[ map { (/^_(-?\d+)$/ ? $1 : $_) - 1 } @vars ];
     |gex;
 

@@ -6,7 +6,7 @@ extends 'Data::Localize::Format';
 no Any::Moose;
 
 sub format {
-    my ($self, $value, @args) = @_;
+    my ($self, $lang, $value, @args) = @_;
     $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
     $value =~ s|%(\w+)\(([^\)]+)\)|
         my $method = $1;
@@ -15,7 +15,7 @@ sub format {
         if (! $code) {
             Carp::confess(Scalar::Util::blessed($self) . " does not implement method '$method'");
         }
-        $code->($self, \@args, \@embedded_args);
+        $code->($self, $lang, \@args, \@embedded_args);
     |gex;
 
     return $value;

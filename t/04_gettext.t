@@ -61,8 +61,8 @@ EOM
             superclasses => [ 'Data::Localize::Format::Gettext' ],
             methods      => {
                 test => sub {
-                    my ($self, $args, $embedded) = @_;
-                    return join(':', @$args, @$embedded);
+                    my ($self, $lang, $args, $embedded) = @_;
+                    return join(':', $lang, @$args, @$embedded);
                 }
             }
         )->new_object()
@@ -72,6 +72,6 @@ EOM
         id   => 'Dynamically Create Me!',
         args => [ '牧大輔' ],
     );
-    is($out, '牧大輔:a:b:cを動的に作成したぜ!', 'dynamic translation');
+    is($out, 'ja:牧大輔:a:b:cを動的に作成したぜ!', 'dynamic translation');
 }
 
