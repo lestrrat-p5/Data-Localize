@@ -55,7 +55,7 @@ next
     its return value as the localized text (UNTESTED -- will do more hacking)
 
 0.00009 05 Aug 2009
-  * Do not allow spurfulous entries in the lexicon hash for gettext
+  * Do not allow superfluous entries in the lexicon hash for gettext
 
 0.00008 04 Aug 2009
   * Add auto_style to determine the auto-fallback style
