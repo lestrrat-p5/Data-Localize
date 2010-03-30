@@ -517,10 +517,24 @@ Get appropriate localizer for language $lang
 
 Filter localizers
 
+=head1 PERFORMANCE
+
+Benchmark run with Mac OS X (10.5.8) perl 5.8.9 (MacPorts)
+
+  Running benchmarks with
+    Locale::Maketext: 1.13
+    Data::Localize:   0.00013_02
+  
+                       Rate   L::M D::L(Namespace) D::L(Gettext) D::L(Gettext+BDB)
+  L::M              11321/s     --            -34%          -44%              -45%
+  D::L(Namespace)   17241/s    52%              --          -15%              -16%
+  D::L(Gettext)     20270/s    79%             18%            --               -1%
+  D::L(Gettext+BDB) 20408/s    80%             18%            1%                --
+
+  
 =head1 TODO
 
 Gettext style localization files -- Make it possible to decode them
-Check performance -- see benchmark/benchmark.pl
 
 =head1 CONTRIBUTORS
 
