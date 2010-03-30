@@ -43,18 +43,22 @@ $loc_gettext_bdb->add_localizer(
 );
 $loc_gettext_bdb->languages(['en']);
 
+print "Running benchmarks with\n",
+    "  Locale::Maketext: ", $Locale::Maketext::VERSION, "\n",
+    "  Data::Localize:   ", $Data::Localize::VERSION, "\n",
+;
 cmpthese(30_000, {
-    locale_maketext => sub {
+    'L::M' => sub {
         my $handle = LM->get_handle('en');
         $handle->maketext('Hello, [_1]', 'John Doe');
     },
-    data_localize => sub {
+    'D::L(Namespace)' => sub {
         $loc->localize('Hello, [_1]', 'John Doe');
     },
-    data_localize_gettext => sub {
+    'D::L(Gettext)' => sub {
         $loc_gettext->localize('Hello, [_1]', 'John Doe');
     },
-    data_localize_gettext_bdb => sub {
+    'D::L(Gettext+BDB)' => sub {
         $loc_gettext_bdb->localize('Hello, [_1]', 'John Doe');
     },
 });
