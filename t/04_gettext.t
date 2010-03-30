@@ -73,7 +73,7 @@ EOM
     );
     is($out, 'ja:a:b:cを動的に作成したぜ!', 'dynamic translation');
 
-    my $out = $loc->localize_for(
+    $out = $loc->localize_for(
         lang => 'ja',
         id   => 'Embedded Dynamic',
         args => [ 42, 84 ],
