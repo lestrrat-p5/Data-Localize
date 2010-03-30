@@ -1,10 +1,12 @@
 Changes
 =======
 
-next
-  * The format method for all Formatters now received the language id as its
-    first argument. The auto localizer passes 'auto' as the language id. (Dave
-    Rolsky)
+0.00013_02 30 Mar 2010
+  * BACKWARDS COMPAT BREAKING CHANGE!
+    * The format method for all Formatters now received the language id as
+      its first argument. The auto localizer passes 'auto' as the language id.
+      (Dave Rolsky)
+    * Gettext method arguments are now passed as %1, %2, etc.
 
 0.00013_01 24 Mar 2010
   * Added MultiLevel localizer that allows you to write a Rails-ish
