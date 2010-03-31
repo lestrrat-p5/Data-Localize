@@ -189,25 +189,35 @@ sub localize {
     my ($self, $key, @args) = @_;
 
     foreach my $lang ($self->languages) {
-        print STDERR "[Data::Localize]: localize - looking up $lang\n" if DEBUG;
+        if (DEBUG()) {
+            print STDERR "[Data::Localize]: localize - looking up $lang\n";
+        }
         foreach my $localizer (@{$self->get_localizer_from_lang($lang) || []}) {
             my $out = $localizer->localize_for(
                 lang => $lang,
                 id => $key,
                 args => \@args
             );
-            return $out if $out;
+
+            if ($out) {
+                if (DEBUG()) {
+                    print STDERR "[Data::Localize]: got localization: $out\n";
+                }
+                return $out;
+            }
         }
     }
 
-    print STDERR "[Data::Localize]: localize - nothing found in registered languages\n" if DEBUG;
+    if (DEBUG()) {
+        print STDERR "[Data::Localize]: localize - nothing found in registered languages\n";
+    }
 
     # if we got here, we missed on all languages.
     # one last shot. try the '*' slot
     foreach my $localizer (@{$self->get_localizer_from_lang('*') || []}) {
         foreach my $lang ($self->languages) {
             if (DEBUG()) {
-                print STDERR "[Data::Localize]: localize - trying $lang for '*' with localizer $localizer\n" if DEBUG;
+                print STDERR "[Data::Localize]: localize - trying $lang for '*' with localizer $localizer\n";
             }
             my $out = $localizer->localize_for(
                 lang => $lang,
@@ -215,7 +225,10 @@ sub localize {
                 args => \@args
             );
             if ($out) {
-                print STDERR "[Data::Localize]: localize - found for $lang, adding to map\n" if DEBUG;
+                if (DEBUG()) {
+                    print STDERR "[Data::Localize]: localize - found for $lang, adding to map\n";
+                }
+
                 # oh, found one? set it in the localizer map so we don't have
                 # to look it up again
                 $self->add_localizer_map($lang, $localizer);
@@ -253,6 +266,9 @@ sub add_localizer {
         $localizer = $klass->new(%args);
     }
 
+    if (DEBUG()) {
+        print STDERR "[Data::Localize]: add_localizer $localizer\n";
+    }
     $localizer->register($self);
     push @{ $self->_localizers }, $localizer;
 }
@@ -502,8 +518,6 @@ Gets the current list of languages
 =head2 add_fallback_languages
 
 =head2 fallback_languages
-
-XXX - Consider if fallback_languages can be removed
 
 =head2 count_localizers()
 
