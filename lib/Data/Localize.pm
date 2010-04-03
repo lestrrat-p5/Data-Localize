@@ -419,7 +419,7 @@ in the current scope
 
     use utf8;
 
-    $loc->loclize( $key, "some-utf8-key-here" );
+    $loc->localize( $key, "some-utf8-key-here" );
 
 =back
 
