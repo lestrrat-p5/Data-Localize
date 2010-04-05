@@ -32,7 +32,7 @@ has use_fuzzy => (
     default => 0,
 );
 
-has allow_empty => (
+has keep_empty => (
     is => 'ro',
     isa => 'Bool',
     default => 0,
@@ -56,7 +56,7 @@ sub _build__parser {
     my $self = shift;
     return Data::Localize::Gettext::Parser->new(
         use_fuzzy  => $self->use_fuzzy(),
-        keep_empty => $self->allow_empty(),
+        keep_empty => $self->keep_empty(),
         encoding   => $self->encoding(),
     );
 }
