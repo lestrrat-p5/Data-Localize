@@ -7,8 +7,9 @@ no Any::Moose;
 
 sub format {
     my ($self, $lang, $value, @args) = @_;
-    $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
+
     $value =~ s|%(\w+)\(([^\)]+)\)| $self->_call_method( $lang, $1, $2, \@args ) |gex;
+    $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
 
     return $value;
 }
@@ -23,7 +24,9 @@ sub _call_method {
 
     my @embedded_args = split /,/, $embedded;
     for (@embedded_args) {
-        $_ =~ s/%(\d+)/$args->[ $1 - 1 ]/;
+        if ( $_ =~ /%(\d+)/ ) {
+            $_ = $args->[ $1 - 1 ];
+        }
     }
 
     return $code->($self, $lang, \@embedded_args);

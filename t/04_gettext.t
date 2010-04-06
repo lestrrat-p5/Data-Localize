@@ -1,7 +1,8 @@
 use strict;
 use utf8;
-use Test::More tests => 9;
+use Test::More tests => 10;
 use File::Spec;
+use Scalar::Util qw(blessed);
 use t::Data::Localize::Test qw(write_po);
 
 use_ok "Data::Localize";
@@ -62,7 +63,7 @@ EOM
             methods      => {
                 test => sub {
                     my ($self, $lang, $args) = @_;
-                    return join(':', $lang, @$args);
+                    return join(':', $lang, map { blessed $_ ? ref $_ : $_ } @$args);
                 }
             }
         )->new_object()
@@ -79,5 +80,13 @@ EOM
         args => [ 42, 84 ],
     );
     is($out, 'ja:42:84を動的に作成したぜ!', 'dynamic translation');
+
+    my $object = bless {}, 'Foo';
+    my $out = $loc->localize_for(
+        lang => 'ja',
+        id   => 'Embedded Dynamic',
+        args => [ 42, $object ],
+    );
+    is($out, 'ja:42:Fooを動的に作成したぜ!', 'dynamic translation with object as argument, object is not stringified');
 }
 
