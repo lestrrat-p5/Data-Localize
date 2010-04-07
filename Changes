@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.00013_03 07 Apr 2010
+  * Fix a problem where Gettext arguments were stringified (Dave Rolsky)
+  * BACKWARDS COMPAT BREAKING CHANGE!
+    * Gettext->allow_empty is now keep_empty (Dave Rolsky)
+
 0.00013_02 30 Mar 2010
   * BACKWARDS COMPAT BREAKING CHANGE!
     * The format method for all Formatters now received the language id as
