@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-Data::Localize::Format::NamedArgs - Process Lexicons With Named Args
+Data::Localize::Format::NamedArgs - Process Lexicons With Named Args (As Opposed To Positional Args)
 
 =head1 SYNOPSIS
 
