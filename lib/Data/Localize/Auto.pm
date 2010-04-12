@@ -8,8 +8,6 @@ __PACKAGE__->meta->make_immutable;
 
 no Any::Moose;
 
-sub get_lexicon {}
-
 sub localize_for {
     my ($self, %args) = @_;
     my ($id, $args) = @args{ qw(id args) };
