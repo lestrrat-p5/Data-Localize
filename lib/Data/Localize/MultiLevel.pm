@@ -70,6 +70,8 @@ sub _rfetch {
     return unless $lexicon;
 
     my $thing = $lexicon->{$keys->[$i]};
+    return unless defined $thing;
+
     my $ref   = ref $thing;
     return unless $ref || length $thing;
 

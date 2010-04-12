@@ -1,7 +1,7 @@
 
 use strict;
 use utf8;
-use Test::More tests => 11;
+use Test::More tests => 13;
 use Test::Requires qw( YAML::XS Config::Any );
 
 use_ok "Data::Localize";
@@ -19,6 +19,7 @@ $loc->add_localizer(
     is( $loc->localize( 'greetings.morning', { name => 'John Doe' } ), 'Good morning, John Doe', "greetings.morning (en)" );
     is( $loc->localize( 'greetings.afternoon', { name => 'John Doe' } ), 'Good afternoon, John Doe', "greetings.afternoon (en)" );
     is( $loc->localize( 'greetings.evening', { name => 'John Doe' } ), 'Good evening, John Doe', "greetings.evening (en)" );
+    is( $loc->localize( 'nonexistent.hello_world' ), 'nonexistent.hello_world' );
 }
 
 {
@@ -28,5 +29,6 @@ $loc->add_localizer(
     is( $loc->localize( 'greetings.morning', { name => 'John Doe' } ), 'おはよう、 John Doe', "greetings.morning (ja)" );
     is( $loc->localize( 'greetings.afternoon', { name => 'John Doe' } ), 'こんにちは、 John Doe', "greetings.afternoon (ja)" );
     is( $loc->localize( 'greetings.evening', { name => 'John Doe' } ), 'こんばんは、 John Doe', "greetings.evening (ja)" );
+    is( $loc->localize( 'nonexistent.hello_world' ), 'nonexistent.hello_world' );
 }
 
