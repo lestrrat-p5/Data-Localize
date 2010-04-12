@@ -13,6 +13,7 @@ requires 'Module::Pluggable::Object';
 requires_any_moose 'mouse' => '0.19';
 
 recommends 'BerkeleyDB';
+recommends 'Config::Any';
 
 test_requires 'Test::More' => 0.94;
 test_requires 'Test::Requires';
