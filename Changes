@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.00013_04 12 Apr 2010
+  * Add a few tests
+  * Fix MultiLevel localizer to handle non existent keys
+
 0.00013_03 07 Apr 2010
   * Fix a problem where Gettext arguments were stringified (Dave Rolsky)
   * BACKWARDS COMPAT BREAKING CHANGE!
