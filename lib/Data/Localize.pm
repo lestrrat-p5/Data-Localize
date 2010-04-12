@@ -266,6 +266,10 @@ sub add_localizer {
         $localizer = $klass->new(%args);
     }
 
+    if (! $localizer || ! $localizer->isa( 'Data::Localize::Localizer' ) ) {
+        Carp::confess("Bad localizer: '" . ( defined $localizer ? $localizer : '(null)' ) . "'");
+    }
+
     if (DEBUG()) {
         print STDERR "[Data::Localize]: add_localizer $localizer\n";
     }
