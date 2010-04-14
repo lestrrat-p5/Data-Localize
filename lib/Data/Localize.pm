@@ -5,7 +5,7 @@ use I18N::LangTags ();
 use I18N::LangTags::Detect ();
 use 5.008;
 
-our $VERSION = '0.00013_04';
+our $VERSION = '0.00014';
 our $AUTHORITY = 'cpan:DMAKI';
 
 BEGIN {
