@@ -71,7 +71,7 @@ sub get_lexicon {
     foreach my $namespace ($self->namespaces) {
         my $klass = "$namespace\::$lang";
 
-        if ($FAILED->{ $klass }++) {
+        if ($FAILED->{ $klass }) {
             if (Data::Localize::DEBUG()) {
                 print STDERR "[Data::Localize::Namespace]: get_lexicon - Already attempted loading $klass and failed. Skipping...\n";
             }

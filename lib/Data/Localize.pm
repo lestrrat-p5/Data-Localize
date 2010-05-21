@@ -188,9 +188,12 @@ sub detect_languages_from_header {
 sub localize {
     my ($self, $key, @args) = @_;
 
+    if (DEBUG()) {
+        print STDERR "[Data::Localize]: localize - looking up $key\n";
+    }
     foreach my $lang ($self->languages) {
         if (DEBUG()) {
-            print STDERR "[Data::Localize]: localize - looking up $lang\n";
+            print STDERR "[Data::Localize]: localize - attempting language $lang\n";
         }
         foreach my $localizer (@{$self->get_localizer_from_lang($lang) || []}) {
             if (DEBUG()) {
@@ -316,8 +319,8 @@ Data::Localize - Alternate Data Localization API
 
     my $loc = Data::Localize->new();
     $loc->add_localizer(
-        class     => "Namespace", # Locale::Maketext-style .pm files
-        namespace => "MyApp::I18N"
+        class      => "Namespace", # Locale::Maketext-style .pm files
+        namespaces => [ "MyApp::I18N" ]
     );
 
     $loc->add_localizer( 
