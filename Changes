@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00015 21 May 2010
+  * Remove defined from defined %hash
+
 0.00014 14 Apr 2010
   * No complaints so far, rolling 0.00014 with the changes from 0.00013_01 to
     0.00013_04
