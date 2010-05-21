@@ -193,6 +193,9 @@ sub localize {
             print STDERR "[Data::Localize]: localize - looking up $lang\n";
         }
         foreach my $localizer (@{$self->get_localizer_from_lang($lang) || []}) {
+            if (DEBUG()) {
+                print STDERR "[Data::Localize]: localize - trying with $localizer\n";
+            }
             my $out = $localizer->localize_for(
                 lang => $lang,
                 id => $key,

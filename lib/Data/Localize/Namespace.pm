@@ -87,7 +87,7 @@ sub get_lexicon {
         no strict 'refs';
         my $first_load = 0;
         if (! $LOADED->{$klass}) {
-            if (defined %{"$klass\::Lexicon"} && defined %{"$klass\::"}) {
+            if (%{"$klass\::Lexicon"} && %{"$klass\::"}) {
                 if (Data::Localize::DEBUG()) {
                     print STDERR "[Data::Localize::Namespace]: get_lexicon - class already loaded\n";
                 }
