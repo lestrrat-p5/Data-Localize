@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00016 21 May 2010
+  * Don't increment load failed count
+
 0.00015 21 May 2010
   * Remove defined from defined %hash
 
