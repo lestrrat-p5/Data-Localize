@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00017 21 Jul 2010
+  * Properly check for isa() instead of does() when coercing
+
 0.00016 21 May 2010
   * Don't increment load failed count
 

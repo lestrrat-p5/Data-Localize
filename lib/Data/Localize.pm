@@ -5,7 +5,7 @@ use I18N::LangTags ();
 use I18N::LangTags::Detect ();
 use 5.008;
 
-our $VERSION = '0.00016';
+our $VERSION = '0.00017';
 our $AUTHORITY = 'cpan:DMAKI';
 
 BEGIN {
@@ -49,7 +49,7 @@ has _fallback_languages => (
 subtype 'Data::Localize::LocalizerListArg'
     => as 'ArrayRef'
     => where {
-        ! grep { ! blessed $_ || ! $_->does('Data::Localize::Localizer') } @$_;
+        ! grep { ! blessed $_ || ! $_->isa('Data::Localize::Localizer') } @$_;
     }
     => message {
         'localizers must be a list of Data::Localize::Localizer implementers'
