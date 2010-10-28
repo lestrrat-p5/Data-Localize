@@ -87,7 +87,7 @@ sub _process_block {
 
     return if $is_fuzzy && ! $self->use_fuzzy();
 
-    s/\\(n|\\)/$1 eq 'n' ? "\n" : "\\" /ge for $msgid, $msgstr;
+    s/\\(n|\\|\")/ $1 eq 'n'  ? "\n" : $1 eq '\\' ? "\\" : '"' /ge for $msgid, $msgstr;
 
     $lexicons->{$msgid} = $msgstr;
 

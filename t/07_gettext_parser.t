@@ -1,7 +1,7 @@
 use strict;
 use utf8;
 use t::Data::Localize::Test qw(write_po);
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Data::Localize::Gettext::Parser;
 
 {
@@ -137,3 +137,24 @@ EOM
 }
 
 
+{
+    my $file = write_po( <<'EOM' );
+msgid "This is \"quote\"."
+msgstr "C'est \"citation\"."
+
+EOM
+
+    my $parser = Data::Localize::Gettext::Parser->new(
+        encoding   => 'utf-8',
+        use_fuzzy  => 0,
+        keep_empty => 0,
+    );
+
+    my $lexicon = $parser->parse_file($file);
+
+    is_deeply(
+        $lexicon,
+        { 'This is "quote".' => q{C'est "citation".} },
+        'parsing a po file with a dobule-quotation marks contained data'
+    );
+}
