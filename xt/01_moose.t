@@ -1,5 +1,6 @@
 use strict;
 use Test::More;
+use Test::Requires 'Moose';
 
 local $ENV{ANY_MOOSE} = 'Moose';
 
