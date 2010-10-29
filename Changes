@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00018 29 Oct 2010
+  * Allow double quotes in localized gettext texts (makamaka)
+
 0.00017 21 Jul 2010
   * Properly check for isa() instead of does() when coercing
 
