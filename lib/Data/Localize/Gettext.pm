@@ -83,23 +83,13 @@ sub add_path {
     $self->load_from_path($_) for @_;
 }
 
-sub get_lexicon_map {
-    my ($self, $key) = @_;
-    return $self->lexicon_map->{ $key };
-}
-
-sub set_lexicon_map {
-    my ($self, $key, $value) = @_;
-    return $self->lexicon_map->{ $key } = $value;
-}
-
 sub load_from_path {
     my ($self, $path) = @_;
 
     return unless $path;
 
     if (Data::Localize::DEBUG()) {
-        print STDERR "[Data::Localize::Gettext]: load_from_path - loading from glob($path)\n" 
+        print STDERR "[Data::Localize::Gettext]: load_from_path - loading from glob($path)\n"
     }
 
     foreach my $x (glob($path)) {
@@ -188,7 +178,7 @@ Registers this localizer
 
 Parse meta data information in .po file
 
-=head1 UTF8 
+=head1 UTF8
 
 Currently, strings are assumed to be utf-8,
 
