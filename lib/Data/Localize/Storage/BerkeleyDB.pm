@@ -24,6 +24,8 @@ has 'store_as_refs' => (
     default => 0
 );
 
+sub is_volitile { 0 }
+
 sub BUILD {
     my ($self, $args) = @_;
     if (! $self->_db) {
