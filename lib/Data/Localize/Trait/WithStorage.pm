@@ -16,11 +16,40 @@ has storage_args => (
     default => sub { +{} }
 );
 
+has 'load_from_storage' => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub { [] },
+);
+
 has lexicon_map => (
     is => 'ro',
     isa => 'HashRef[Data::Localize::Storage]',
     default => sub { +{} },
 );
+
+sub BUILD {}
+after 'BUILD' => sub {
+    my $self = shift;
+    if ( my $langs = $self->load_from_storage ) {
+        my $storage_class = $self->_canonicalize_storage_class;
+        my $storage_args  = $self->storage_args;
+
+        Any::Moose::load_class( $storage_class );
+
+        unless ( $storage_class->is_volitile ) {
+            foreach my $lang ( @$langs ) {
+
+                $storage_args->{lang} = $lang;
+
+                $self->set_lexicon_map(
+                    $lang,
+                    $storage_class->new( $storage_args )
+                );
+            }
+        }
+    }
+};
 
 no Any::Moose;
 
