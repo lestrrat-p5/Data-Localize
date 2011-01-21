@@ -70,12 +70,13 @@ sub _build_storage {
 
     my $class = $self->storage_class;
     my $args  = $self->storage_args;
-    my %args;
 
     if ($class !~ s/^\+//) {
         $class = "Data::Localize::Storage::$class";
     }
     Any::Moose::load_class($class);
+
+    $args->{lang} = $lang;
 
     if ( $class->isa('Data::Localize::Storage::BerkeleyDB') ) {
         my $dir  = ($args->{dir} ||= File::Temp::tempdir(CLEANUP => 1));
@@ -87,7 +88,7 @@ sub _build_storage {
             }
         );
     } else {
-        return $class->new();
+        return $class->new( $args );
     }
 }
 
