@@ -67,17 +67,23 @@ sub merge_lexicon {
 sub _build_storage {
     my ($self, $lang) = @_;
 
-    my $class = $self->storage_class;
+    my $class = $self->_canonicalize_storage_class;
     my $args  = $self->storage_args;
 
-    if ($class !~ s/^\+//) {
-        $class = "Data::Localize::Storage::$class";
-    }
     Any::Moose::load_class($class);
 
     $args->{lang} = $lang;
 
     return $class->new( $args );
+}
+
+sub _canonicalize_storage_class {
+    my $self  = shift;
+    my $class = $self->storage_class;
+    if ($class !~ s/^\+//) {
+        $class = "Data::Localize::Storage::$class";
+    }
+    $class;
 }
 
 _alias_and_deprecate lexicon_get => 'get_lexicon';
