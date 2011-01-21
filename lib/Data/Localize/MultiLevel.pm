@@ -5,6 +5,10 @@ use Config::Any;
 extends 'Data::Localize::Localizer';
 with 'Data::Localize::Trait::WithStorage' => {
         -exclude => [ qw(get_lexicon set_lexicon) ],
+        -alias   => {
+            'get_lexicon' => 'get_lexicon_from_storage',
+            'set_lexicon' => 'set_lexicon_to_storage'
+        }
     },
 ;
 
@@ -49,19 +53,40 @@ sub load_from_path {
                 $lang,
             );
         }
-        $self->set_lexicon_map( $lang, $lexicons->{$lang} );
+
+        $self->merge_lexicon($lang, $lexicons->{$lang});
         $self->_localizer->add_localizer_map($lang, $self) if $self->_localizer;
     }
 }
 
 sub get_lexicon {
     my ($self, $lang, $key) = @_;
-    _rfetch( $self->get_lexicon_map($lang), 0, [ split /\./, $key ] );
+
+    my ($storage_key, @key_path) = split /\./, $key;
+
+    my $lexicon = $self->get_lexicon_from_storage($lang, $storage_key);
+
+    return _rfetch( $lexicon, 0, \@key_path )
+        if @key_path;
+
+    return $lexicon;
 }
 
 sub set_lexicon {
     my ($self, $lang, $key, $value) = @_;
-    _rstore( $self->get_lexicon_map($lang), 0, [ split /\./, $key ], $value );
+
+    my ($storage_key, @key_path) = split /\./, $key;
+
+    if ( @key_path ) {
+        my $lexicon = $self->get_lexicon_from_storage($lang, $storage_key);
+        _rstore( $lexicon, 0, \@key_path, $value );
+        $self->set_lexicon_to_storage( $storage_key, $lexicon );
+    }
+    else {
+         $self->set_lexicon_to_storage( $storage_key, $value );
+    }
+
+    return;
 }
 
 sub _rfetch {
@@ -137,7 +162,7 @@ Data::Localize::MultiLevel - Fetch Data From Multi-Level Data Structures
 
     $loc->localize( 'foo.key', { arg => $value, ... } );
 
-    # above is internally... 
+    # above is internally...
     $loc->localize_for(
         lang => 'en',
         id => 'foo.key',
