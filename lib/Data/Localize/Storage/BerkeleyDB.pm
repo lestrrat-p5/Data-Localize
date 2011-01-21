@@ -4,6 +4,8 @@ use Any::Moose 'Util::TypeConstraints';
 use BerkeleyDB;
 use Carp ();
 use Encode ();
+use File::Spec ();
+use File::Temp ();
 
 with 'Data::Localize::Storage';
 
@@ -24,6 +26,13 @@ sub BUILD {
             $class = "BerkeleyDB::$class";
         }
         Any::Moose::load_class($class);
+
+        my $dir = ($args->{dir} ||= File::Temp::tempdir(CLEANUP => 1));
+        $args->{bdb_args} ||= {
+            -Filename => File::Spec->catfile($dir, $self->lang),
+            -Flags    => BerkeleyDB::DB_CREATE(),
+        };
+
         $self->_db( $class->new( $args->{bdb_args} || {} ) ||
             Carp::confess("Failed to create $class: $BerkeleyDB::Error")
         );

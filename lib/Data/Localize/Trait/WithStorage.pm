@@ -1,6 +1,5 @@
 package Data::Localize::Trait::WithStorage;
 use Any::Moose '::Role';
-use File::Temp ();
 use Data::Localize::Util qw(_alias_and_deprecate);
 
 has storage_class => (
@@ -78,18 +77,7 @@ sub _build_storage {
 
     $args->{lang} = $lang;
 
-    if ( $class->isa('Data::Localize::Storage::BerkeleyDB') ) {
-        my $dir  = ($args->{dir} ||= File::Temp::tempdir(CLEANUP => 1));
-        return $class->new(
-            bdb_class => 'Hash',
-            bdb_args  => {
-                -Filename => File::Spec->catfile($dir, $lang),
-                -Flags    => BerkeleyDB::DB_CREATE(),
-            }
-        );
-    } else {
-        return $class->new( $args );
-    }
+    return $class->new( $args );
 }
 
 _alias_and_deprecate lexicon_get => 'get_lexicon';
