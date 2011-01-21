@@ -106,3 +106,5 @@ use_ok "Data::Localize";
         is( $loc->localize( 'nonexistent.hello_world' ), 'nonexistent.hello_world' );
     }
 }
+
+File::Path::remove_tree( $DB_DIR );
