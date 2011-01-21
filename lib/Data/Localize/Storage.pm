@@ -9,6 +9,8 @@ has 'lang' => (
 
 requires qw(get set);
 
+sub is_volitile { 1 }
+
 no Any::Moose '::Role';
 
 1;
