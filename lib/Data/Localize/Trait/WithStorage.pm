@@ -46,7 +46,7 @@ sub set_lexicon {
     my ($self, $lang, $id, $value) = @_;
     my $lexicon = $self->get_lexicon_map($lang);
     if (! $lexicon) {
-        $lexicon = $self->build_storage();
+        $lexicon = $self->_build_storage($lang);
         $self->set_lexicon_map($lang, $lexicon);
     }
     $lexicon->set($id, $value);
