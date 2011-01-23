@@ -1,7 +1,7 @@
 use strict;
 use utf8;
 use Test::More tests => 15;
-use Test::Requires qw(BerkeleyDB);
+use Test::Requires qw(BerkeleyDB YAML::XS);
 use t::Data::Localize::Test qw(write_po);
 
 use_ok "Data::Localize";
