@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.00019 Jan 23 2011
+  * Allow loading lexicons from an already existing storage (Stevan Little)
+  * Add volatile attribute in storage (Stevan Little)
+  * Tweak MultiLevel so that it's more storage friendly (Stevan Little)
+  * BDB Storage tweaks (Stevan Little)
+  * Fix bug in calling lazy builder for storage object (Stevan Little)
+  * Store lang in the localizer (Stevan Little)
+
 0.00018 29 Oct 2010
   * Allow double quotes in localized gettext texts (makamaka)
 
