@@ -1,7 +1,7 @@
 use strict;
 use utf8;
 use Test::More tests => 27;
-use Test::Requires qw(BerkeleyDB YAML::XS);
+use Test::Requires qw(BerkeleyDB YAML::XS Config::Any);
 use t::Data::Localize::Test qw(write_po);
 use File::Path;
 
