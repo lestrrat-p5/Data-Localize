@@ -9,7 +9,7 @@ has 'lang' => (
 
 requires qw(get set);
 
-sub is_volitile { 1 }
+sub is_volatile { 1 }
 
 no Any::Moose '::Role';
 
@@ -30,5 +30,9 @@ Data::Localize::Storage - Base Role For Storage Objects
 
     sub get { ... }
     sub set { ... }
+
+=head1 METHODS
+
+=head2 is_volatile
 
 =cut

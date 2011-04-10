@@ -37,7 +37,7 @@ after 'BUILD' => sub {
 
         Any::Moose::load_class( $storage_class );
 
-        unless ( $storage_class->is_volitile ) {
+        unless ( $storage_class->is_volatile ) {
             foreach my $lang ( @$langs ) {
 
                 $storage_args->{lang} = $lang;
