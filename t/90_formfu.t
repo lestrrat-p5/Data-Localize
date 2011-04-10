@@ -15,8 +15,12 @@ $localize->add_localizer(
     namespace => "HTML::FormFu::I18N"
 );
 
+# XXX HTML::FormFu's Change log does not say so, but apparently
+# it doesn't allow single values to language parameter as of 0.09
+# (Note: the author of Data::Localize no longer use FormFu, so
+# please send pullreqs, if there are problems)
 my $formfu = HTML::FormFu->new({
-    languages => 'ja',
+    languages => ['ja'],
 });
 $formfu->add_default_localize_object($localize);
 
