@@ -1,6 +1,7 @@
 package Data::Localize;
 use Any::Moose;
 use Any::Moose '::Util::TypeConstraints';
+use Scalar::Util ();
 use I18N::LangTags ();
 use I18N::LangTags::Detect ();
 use 5.008;
@@ -260,7 +261,7 @@ sub add_localizer {
 
     my $localizer;
     if (@_ == 1) {
-        $localizer = $_[1];
+        $localizer = $_[0];
     } else {
         my %args = @_;
         my $klass = delete $args{class};
@@ -272,7 +273,7 @@ sub add_localizer {
         $localizer = $klass->new(%args);
     }
 
-    if (! $localizer || ! $localizer->isa( 'Data::Localize::Localizer' ) ) {
+    if (! $localizer || ! Scalar::Util::blessed($localizer) || ! $localizer->isa( 'Data::Localize::Localizer' ) ) {
         Carp::confess("Bad localizer: '" . ( defined $localizer ? $localizer : '(null)' ) . "'");
     }
 
