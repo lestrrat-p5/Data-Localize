@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.00020 Apr 10 2011
+  * add_localizer($object) was not working (rt #67337). Reported by Klaus Ita
+  * FormFu 0.09 and up were failing (rt #67347). Reported by Andreas Koenig
+  * Tests failed if Config::Any was not installed (rt #67342). Reported by Andreas Koenig
+  * MultiLevel was failing miserably for newer Mooses. Fixed by
+    using method modifiers instead of silly role hacks.
+
 0.00019 Jan 23 2011
   * Allow loading lexicons from an already existing storage (Stevan Little)
   * Add volatile attribute in storage (Stevan Little)
