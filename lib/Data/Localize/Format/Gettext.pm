@@ -60,6 +60,30 @@ __END__
 
 Data::Localize::Format::Gettext - Gettext Formatter
 
+=head1 SYNOPSIS
+
+    # Used by Data::Localize::Gettext by default, but if you want to
+    # customize ( maybe include function calls "%myfunc(...)" ), then
+    # do this:
+
+    $loc = Data::Localize->new();
+    $loc->add_localizer(
+        Data::Localize::Gettext->new(
+            formatter => Data::Localize::Format::Gettext->new(
+                functions => {
+                    foo => sub {
+                        my ($lang, $args) = @_;
+                        # $lang isa 'Str',
+                        # $args isa 'ArrayRef'
+                        return "localized text";
+                    },
+                    bar => sub { ... },
+                    baz => sub { ... },
+                }
+            )
+        )
+    );
+
 =head1 METHODS
 
 =head2 format
