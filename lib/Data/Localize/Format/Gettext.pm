@@ -3,21 +3,35 @@ use Any::Moose;
 
 extends 'Data::Localize::Format';
 
+has functions => (
+    is => 'ro',
+    isa => 'HashRef',
+    default => sub { {} }
+);
+
 no Any::Moose;
 
 sub format {
     my ($self, $lang, $value, @args) = @_;
 
-    $value =~ s|%(\w+)\(([^\)]+)\)| $self->_call_method( $lang, $1, $2, \@args ) |gex;
+    $value =~ s|%(\w+)\(([^\)]+)\)|
+        $self->_call_function_or_method( $lang, $1, $2, \@args )
+    |gex;
     $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
 
     return $value;
 }
 
-sub _call_method {
+sub _call_function_or_method {
     my ($self, $lang, $method, $embedded, $args) = @_;
 
-    my $code = $self->can($method);
+    my $code;
+    my $is_method;
+    if ( $code = $self->functions->{$method} ) {
+        $is_method = 0;
+    } elsif ( $code = $self->can($method) ) {
+        $is_method = 1;
+    }
     if (! $code) {
         Carp::confess(Scalar::Util::blessed($self) . " does not implement method '$method'");
     }
@@ -29,7 +43,11 @@ sub _call_method {
         }
     }
 
-    return $code->($self, $lang, \@embedded_args);
+    my @args = ( $lang, \@embedded_args );
+    if ($is_method) {
+        unshift @args, $self;
+    }
+    return $code->(@args);
 }
 
 __PACKAGE__->meta->make_immutable();
