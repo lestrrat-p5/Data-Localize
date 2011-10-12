@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00021 Oct 13 2011
+  * Add a way to insert callbacks that can be used in the formatters (doy)
+
 0.00020 Apr 10 2011
   * add_localizer($object) was not working (rt #67337). Reported by Klaus Ita
   * FormFu 0.09 and up were failing (rt #67347). Reported by Andreas Koenig
