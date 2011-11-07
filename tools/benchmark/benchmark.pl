@@ -53,12 +53,15 @@ cmpthese(30_000, {
         $handle->maketext('Hello, [_1]', 'John Doe');
     },
     'D::L(Namespace)' => sub {
+        $loc->set_languages('en');
         $loc->localize('Hello, [_1]', 'John Doe');
     },
     'D::L(Gettext)' => sub {
+        $loc->set_languages('en');
         $loc_gettext->localize('Hello, [_1]', 'John Doe');
     },
     'D::L(Gettext+BDB)' => sub {
+        $loc->set_languages('en');
         $loc_gettext_bdb->localize('Hello, [_1]', 'John Doe');
     },
 });
