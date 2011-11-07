@@ -359,8 +359,8 @@ Data::Localize is completely object-oriented. YMMV.
 
 =head2 Faster
 
-On my benchmarks, Data::Localize is consistently faster than Locale::Maketext
-by 50~80%
+On some my benchmarks, Data::Localize is faster than Locale::Maketext
+by 50~80%. (But see PERFORMANCE)
 
 =head2 Scalable For Large Amount Of Lexicons
 
@@ -542,21 +542,40 @@ Get appropriate localizer for language $lang
 
 Filter localizers
 
-=head1 PERFORMANCE
+=head1 PERFORMANCE 
+
+tl;dr: Use one that fits your needs
+
+=head2 Using explicit get_handle for every request
+
+This benchmark assumes that you're fetching the lexicon anew for
+every request.
 
 Benchmark run with Mac OS X (10.5.8) perl 5.8.9 (MacPorts)
 
   Running benchmarks with
-    Locale::Maketext: 1.13
-    Data::Localize:   0.00013_02
-  
-                       Rate   L::M D::L(Namespace) D::L(Gettext) D::L(Gettext+BDB)
-  L::M              11321/s     --            -34%          -44%              -45%
-  D::L(Namespace)   17241/s    52%              --          -15%              -16%
-  D::L(Gettext)     20270/s    79%             18%            --               -1%
-  D::L(Gettext+BDB) 20408/s    80%             18%            1%                --
+    Locale::Maketext: 1.19
+    Data::Localize:   0.00021
+                       Rate D::L(Namespace)   L::M D::L(Gettext+BDB) D::L(Gettext)
+  D::L(Namespace)    6818/s              --   -41%              -75%          -75%
+  L::M              11494/s             69%     --              -57%          -57%
+  D::L(Gettext+BDB) 27027/s            296%   135%                --            0%
+  D::L(Gettext)     27027/s            296%   135%                0%            --
 
-  
+=head2 Using cached lexicon objects for all
+
+This benchmark assumes that you're fetching the lexicon once for
+a particular language, and you keep it in memory for reuse
+
+  Running benchmarks with
+    Locale::Maketext: 1.19
+    Data::Localize:   0.00021
+                       Rate D::L(Namespace) D::L(Gettext+BDB) D::L(Gettext)   L::M
+  D::L(Namespace)    3636/s              --              -68%          -74%   -95%
+  D::L(Gettext+BDB) 11538/s            217%                --          -16%   -84%
+  D::L(Gettext)     13761/s            278%               19%            --   -81%
+  L::M              71429/s           1864%              519%          419%     --
+
 =head1 TODO
 
 Gettext style localization files -- Make it possible to decode them
