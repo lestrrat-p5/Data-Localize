@@ -14,10 +14,14 @@ no Any::Moose;
 sub format {
     my ($self, $lang, $value, @args) = @_;
 
-    $value =~ s|%(\w+)\(([^\)]+)\)|
-        $self->_call_function_or_method( $lang, $1, $2, \@args )
-    |gex;
-    $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
+    if ( index($value, '(') > -1 ) {
+        $value =~ s|%(\w+)\(([^\)]+)\)|
+            $self->_call_function_or_method( $lang, $1, $2, \@args )
+        |gex;
+    }
+    if (@args) {
+        $value =~ s/%(\d+)/ defined $args[$1 - 1] ? $args[$1 - 1] : '' /ge;
+    }
 
     return $value;
 }

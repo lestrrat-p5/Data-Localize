@@ -42,7 +42,9 @@ sub localize_for {
         print STDERR "[Data::Localize::Localizer]: localize_for - $id -> ",
             defined($value) ? $value : '(null)', "\n";
     }
-    return $self->format_string($lang, $value, @$args) if $value;
+    if ( $value ) {
+        return $self->format_string($lang, $value, @$args);
+    }
     return ();
 }
 
