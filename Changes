@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.00022 Nov 07 2011
+  * Very small optimization.
+  * Doc fixes on performance
+
 0.00021 Oct 13 2011
   * Add a way to insert callbacks that can be used in the formatters (doy)
 
