@@ -1,9 +1,7 @@
 package Data::Localize::Format::Maketext;
-use Any::Moose;
+use Moo;
 
 extends 'Data::Localize::Format';
-
-no Any::Moose;
 
 sub format {
     my ($self, $lang, $value, @args) = @_;
@@ -22,8 +20,6 @@ sub format {
 
     return $value;
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
 

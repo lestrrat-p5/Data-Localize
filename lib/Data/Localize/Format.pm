@@ -1,10 +1,7 @@
 package Data::Localize::Format;
-use Any::Moose;
-no Any::Moose;
+use Moo;
 
 sub format { Carp::confess("format() must be overridden") }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
 

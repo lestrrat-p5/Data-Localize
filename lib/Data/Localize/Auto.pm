@@ -1,12 +1,14 @@
-
 package Data::Localize::Auto;
-use Any::Moose;
+use Moo;
+use Data::Localize;
+BEGIN {
+    if (Data::Localize::DEBUG) {
+        require Data::Localize::Log;
+        Data::Localize::Log->import;
+    }
+}
 
 extends 'Data::Localize::Localizer';
-
-__PACKAGE__->meta->make_immutable;
-
-no Any::Moose;
 
 sub localize_for {
     my ($self, %args) = @_;

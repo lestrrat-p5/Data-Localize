@@ -1,15 +1,12 @@
 package Data::Localize::Format::Gettext;
-use Any::Moose;
+use Moo;
 
 extends 'Data::Localize::Format';
 
 has functions => (
     is => 'ro',
-    isa => 'HashRef',
     default => sub { {} }
 );
-
-no Any::Moose;
 
 sub format {
     my ($self, $lang, $value, @args) = @_;
@@ -53,8 +50,6 @@ sub _call_function_or_method {
     }
     return $code->(@args);
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
 

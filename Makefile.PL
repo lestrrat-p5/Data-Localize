@@ -4,13 +4,13 @@ use inc::Module::Install;
 name('Data-Localize');
 all_from('lib/Data/Localize.pm');
 
-requires 'Any::Moose';
+requires 'Moo' => '1.000008';
 requires 'Encode';
 requires 'I18N::LangTags';
 requires 'I18N::LangTags::Detect';
+requires 'Log::Minimal' => '0.14';
+requires 'Module::Load';
 requires 'Module::Pluggable::Object';
-
-requires_any_moose 'mouse' => '0.19';
 
 recommends 'BerkeleyDB';
 recommends 'Config::Any';
@@ -22,6 +22,5 @@ no_index directory => 'tools';
 
 author_tests 'xt';
 auto_set_repository;
-auto_include_deps;
 
 WriteAll;

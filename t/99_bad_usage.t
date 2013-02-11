@@ -1,9 +1,9 @@
 package BadLocalizer;
-use Any::Moose;
+use Moo;
 extends 'Data::Localize::Localizer';
 
 package BadFormatter;
-use Any::Moose;
+use Moo;
 extends 'Data::Localize::Format';
 
 package main;

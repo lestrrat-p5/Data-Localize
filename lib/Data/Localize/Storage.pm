@@ -1,17 +1,14 @@
 package Data::Localize::Storage;
-use Any::Moose '::Role';
+use Moo::Role;
 
 has 'lang' => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1
 );
 
 requires qw(get set);
 
 sub is_volatile { 1 }
-
-no Any::Moose '::Role';
 
 1;
 
@@ -24,8 +21,7 @@ Data::Localize::Storage - Base Role For Storage Objects
 =head1 SYNOPSIS
 
     package MyStorage;
-    use Any::Moose;
-
+    use Moo;
     with 'Data::Localize::Storage';
 
     sub get { ... }

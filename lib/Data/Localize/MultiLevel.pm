@@ -1,6 +1,13 @@
 package Data::Localize::MultiLevel;
-use Any::Moose;
+use Moo;
 use Config::Any;
+use Data::Localize;
+BEGIN {
+    if (Data::Localize::DEBUG) {
+        require Data::Localize::Log;
+        Data::Localize::Log->import;
+    }
+}
 
 extends 'Data::Localize::Localizer';
 with 'Data::Localize::Trait::WithStorage';
@@ -50,10 +57,8 @@ around set_lexicon => sub {
     return;
 };
 
-no Any::Moose;
-
 sub _build_formatter {
-    Any::Moose::load_class('Data::Localize::Format::NamedArgs');
+    Module::Load::load('Data::Localize::Format::NamedArgs');
     return Data::Localize::Format::NamedArgs->new();
 }
 
@@ -68,8 +73,8 @@ sub load_from_path {
         # should have one root item
         my ($lang) = keys %$lexicons;
 
-        if (Data::Localize::DEBUG()) {
-            printf STDERR ("[%s] Loaded %s for languages %s\n",
+        if (Data::Localize::DEBUG) {
+            debugf("load_from_path - Loaded %s for languages %s",
                 Scalar::Util::blessed($self),
                 $filename,
                 $lang,
@@ -97,8 +102,8 @@ sub _rfetch {
     }
 
     if ($ref ne 'HASH') {
-        if (Data::Localize::DEBUG()) {
-            printf STDERR ("%s does not point to a hash\n",
+        if (Data::Localize::DEBUG) {
+            debugf("%s does not point to a hash",
                 join('.', map { $keys->[$_] } 0..$i)
             );
         }
@@ -121,8 +126,8 @@ sub _rstore {
     my $thing = $lexicon->{$keys->[$i]};
 
     if (ref $thing ne 'HASH') {
-        if (Data::Localize::DEBUG()) {
-            printf STDERR ("%s does not point to a hash\n",
+        if (Data::Localize::DEBUG) {
+            debugf("%s does not point to a hash",
                 join('.', map { $keys->[$_] } 0..$i)
             );
         }

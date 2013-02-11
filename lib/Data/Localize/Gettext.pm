@@ -1,25 +1,32 @@
 
 package Data::Localize::Gettext;
 use utf8;
-use Any::Moose;
+use Moo;
+use Module::Load ();
 use Carp ();
 use Data::Localize::Gettext::Parser;
 use File::Temp ();
+use Data::Localize;
 use Data::Localize::Util qw(_alias_and_deprecate);
 use Data::Localize::Storage::Hash;
+
+BEGIN {
+    if (Data::Localize::DEBUG) {
+        require Data::Localize::Log;
+        Data::Localize::Log->import;
+    }
+}
 
 extends 'Data::Localize::Localizer';
 with 'Data::Localize::Trait::WithStorage';
 
 has encoding => (
     is => 'ro',
-    isa => 'Str',
-    default => 'utf-8',
+    default => sub { 'utf-8' },
 );
 
 has paths => (
     is => 'ro',
-    isa => 'ArrayRef',
     trigger => sub {
         my $self = shift;
         $self->load_from_path($_) for @{$_[0]};
@@ -28,29 +35,24 @@ has paths => (
 
 has use_fuzzy => (
     is => 'ro',
-    isa => 'Bool',
-    default => 0,
+    default => sub { 0 },
 );
 
 has keep_empty => (
     is => 'ro',
-    isa => 'Bool',
-    default => 0,
+    default => sub { 0 },
 );
 
 has _parser => (
-    is => 'ro',
-    isa => 'Data::Localize::Gettext::Parser',
-    lazy_build => 1,
+    is => 'lazy',
+    isa => sub { $_[0]->isa('Data::Localize::Gettext::Parser') },
 );
 
-override register => sub {
-    my ($self, $loc) = @_;
-    super();
+around register => sub {
+    my ($next, $self, $loc) = @_;
+    $self->$next($loc);
     $loc->add_localizer_map('*', $self);
 };
-
-no Any::Moose;
 
 sub _build__parser {
     my $self = shift;
@@ -73,7 +75,7 @@ sub BUILDARGS {
 }
 
 sub _build_formatter {
-    Any::Moose::load_class( 'Data::Localize::Format::Gettext' );
+    Module::Load::load( 'Data::Localize::Format::Gettext' );
     return Data::Localize::Format::Gettext->new();
 }
 
@@ -88,8 +90,8 @@ sub load_from_path {
 
     return unless $path;
 
-    if (Data::Localize::DEBUG()) {
-        print STDERR "[Data::Localize::Gettext]: load_from_path - loading from glob($path)\n"
+    if (Data::Localize::DEBUG) {
+        debugf("load_from_path - loading from glob(%s)", $path);
     }
 
     foreach my $x (glob($path)) {
@@ -100,8 +102,8 @@ sub load_from_path {
 sub load_from_file {
     my ($self, $file) = @_;
 
-    if (Data::Localize::DEBUG()) {
-        print STDERR "[Data::Localize::Gettext]: load_from_file - loading from file $file\n"
+    if (Data::Localize::DEBUG) {
+        debugf("load_from_file - loading from file %s", $file);
     }
 
     my $lexicon = $self->_parser->parse_file($file);
@@ -109,9 +111,8 @@ sub load_from_file {
     my $lang = File::Basename::basename($file);
     $lang =~ s/\.[mp]o$//;
 
-    if (Data::Localize::DEBUG()) {
-        print STDERR "[Data::Localize::Gettext]: load_from_file - registering ",
-            scalar keys %{$lexicon}, " keys\n"
+    if (Data::Localize::DEBUG) {
+        debugf("load_from_file - registering %d keys", scalar keys %{$lexicon});
     }
 
     # This needs to be merged
@@ -119,8 +120,6 @@ sub load_from_file {
 }
 
 _alias_and_deprecate path_add => 'add_path';
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

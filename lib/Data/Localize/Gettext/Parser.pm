@@ -1,27 +1,20 @@
 package Data::Localize::Gettext::Parser;
-use Any::Moose;
+use Moo;
 
 has encoding => (
     is       => 'ro',
-    isa      => 'Str',
     required => 1,
 );
 
 has use_fuzzy => (
     is       => 'ro',
-    isa      => 'Bool',
     required => 1,
 );
 
 has keep_empty => (
     is       => 'ro',
-    isa      => 'Bool',
     required => 1,
 );
-
-no Any::Moose;
-
-__PACKAGE__->meta->make_immutable();
 
 sub parse_file {
     my ($self, $file) = @_;

@@ -1,6 +1,5 @@
 package Data::Localize::Storage::BerkeleyDB;
-use Any::Moose;
-use Any::Moose 'Util::TypeConstraints';
+use Moo;
 use BerkeleyDB;
 use Carp ();
 use Encode ();
@@ -33,7 +32,7 @@ sub BUILD {
         if ($class !~ s/^\+//) {
             $class = "BerkeleyDB::$class";
         }
-        Any::Moose::load_class($class);
+        Module::Load::load($class);
 
         my $dir = ($args->{dir} ||= File::Temp::tempdir(CLEANUP => 1));
         $args->{bdb_args} ||= {
@@ -88,11 +87,6 @@ sub set {
         Carp::confess("Failed to set value $key");
     }
 }
-
-__PACKAGE__->meta->make_immutable();
-
-no Any::Moose;
-no Any::Moose 'Util::TypeConstraints';
 
 1;
 

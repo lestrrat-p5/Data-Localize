@@ -1,10 +1,9 @@
 package Data::Localize::Trait::WithStorage;
-use Any::Moose '::Role';
+use Moo::Role;
 use Data::Localize::Util qw(_alias_and_deprecate);
 
 has storage_class => (
-    is => 'ro',
-    isa => 'Str',
+    is => 'lazy',
     default => sub {
         return '+Data::Localize::Storage::Hash';
     }
@@ -12,19 +11,16 @@ has storage_class => (
 
 has storage_args => (
     is => 'ro',
-    isa => 'HashRef',
     default => sub { +{} }
 );
 
 has 'load_from_storage' => (
     is      => 'ro',
-    isa     => 'ArrayRef',
     default => sub { [] },
 );
 
 has lexicon_map => (
     is => 'ro',
-    isa => 'HashRef[Data::Localize::Storage]',
     default => sub { +{} },
 );
 
@@ -35,7 +31,7 @@ after 'BUILD' => sub {
         my $storage_class = $self->_canonicalize_storage_class;
         my $storage_args  = $self->storage_args;
 
-        Any::Moose::load_class( $storage_class );
+        Module::Load::load( $storage_class );
 
         unless ( $storage_class->is_volatile ) {
             foreach my $lang ( @$langs ) {
@@ -50,8 +46,6 @@ after 'BUILD' => sub {
         }
     }
 };
-
-no Any::Moose;
 
 sub get_lexicon_map {
     my ($self, $key) = @_;
@@ -99,7 +93,7 @@ sub _build_storage {
     my $class = $self->_canonicalize_storage_class;
     my $args  = $self->storage_args;
 
-    Any::Moose::load_class($class);
+    Module::Load::load($class);
 
     $args->{lang} = $lang;
 

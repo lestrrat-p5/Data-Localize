@@ -1,27 +1,30 @@
 
 package Data::Localize::Localizer;
 use utf8;
-use Any::Moose;
+use Moo;
 use Carp ();
+use Data::Localize;
+BEGIN {
+    if (Data::Localize::DEBUG) {
+        require Data::Localize::Log;
+        Data::Localize::Log->import
+    }
+}
 
 has _localizer => (
     is => 'rw',
-    isa => 'Data::Localize',
     weak_ref => 1,
 );
 
 has formatter => (
-    is => 'ro',
-    isa => 'Data::Localize::Format',
+    is => 'lazy',
+    isa => sub { $_[0]->isa('Data::Localize::Format') },
     required => 1,
-    lazy_build => 1,
     handles => { format_string => 'format' },
 );
 
-no Any::Moose;
-
 sub _build_formatter {
-    Any::Moose::load_class('Data::Localize::Format::Maketext');
+    Module::Load::load('Data::Localize::Format::Maketext');
     return Data::Localize::Format::Maketext->new();
 }
 
@@ -39,16 +42,16 @@ sub localize_for {
 
     my $value = $self->get_lexicon($lang, $id) or return ();
     if (Data::Localize::DEBUG()) {
-        print STDERR "[Data::Localize::Localizer]: localize_for - $id -> ",
-            defined($value) ? $value : '(null)', "\n";
+        debugf("localize_for - '%s' -> '%s'",
+            $id,
+            defined($value) ? Encode::encode_utf8($value) : '(null)'
+        );
     }
     if ( $value ) {
         return $self->format_string($lang, $value, @$args);
     }
     return ();
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
 
@@ -61,11 +64,11 @@ Data::Localize::Localizer - Localizer Base Class
 =head1 SYNOPSIS
 
     package MyLocalizer;
-    use Moose;
+    use Moo;
 
     extends 'Data::Localize::Localizer';
 
-    no Moose;
+    no Moo;
 
 =head1 METHODS
 

@@ -56,25 +56,26 @@ EOM
 
 {
     require Data::Localize::Format::Gettext;
+    @Data::Localize::Format::Gettext::TestWithCustomMethod::ISA =
+        qw( Data::Localize::Format::Gettext )
+    ;
+    sub Data::Localize::Format::Gettext::TestWithCustomMethod::test {
+        my ($self, $lang, $args) = @_;
+        return join(':', $lang, map { blessed $_ ? ref $_ : $_ } @$args);
+    }
+
     my $loc = Data::Localize::Gettext->new(
         path => 't/04_gettext/*.po',
-        formatter => Data::Localize::Format::Gettext->meta->create_anon_class(
-            superclasses => [ 'Data::Localize::Format::Gettext' ],
-            methods      => {
-                test => sub {
-                    my ($self, $lang, $args) = @_;
-                    return join(':', $lang, map { blessed $_ ? ref $_ : $_ } @$args);
-                }
-            }
-        )->new_object({
+        formatter => Data::Localize::Format::Gettext::TestWithCustomMethod->new(
             functions => {
                 foo => sub {
                     my ($lang, $args) = @_;
                     return join(':', $lang, map { blessed $_ ? ref $_ : $_ } @$args);
                 }
             }
-        })
+        )
     );
+
     my $out = $loc->localize_for(
         lang => 'ja',
         id   => 'Dynamically Create Me!',

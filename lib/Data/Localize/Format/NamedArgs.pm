@@ -1,9 +1,7 @@
 package Data::Localize::Format::NamedArgs;
-use Any::Moose;
+use Moo;
 
 extends 'Data::Localize::Format';
-
-no Any::Moose;
 
 sub format {
     my ($self, $lang, $value, $args) = @_;
@@ -13,8 +11,6 @@ sub format {
     $value =~ s/{{([^}]+)}}/ $args->{ $1 } || '' /ex;
     return $value;
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
 

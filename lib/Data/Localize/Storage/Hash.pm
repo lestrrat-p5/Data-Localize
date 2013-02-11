@@ -1,5 +1,5 @@
 package Data::Localize::Storage::Hash;
-use Any::Moose;
+use Moo;
 
 with 'Data::Localize::Storage';
 
@@ -12,10 +12,6 @@ sub set {
     my $self = shift;
     $self->{$_[0]} = $_[1];
 }
-
-__PACKAGE__->meta->make_immutable();
-
-no Any::Moose;
 
 1;
 
