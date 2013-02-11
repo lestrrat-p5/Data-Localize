@@ -552,32 +552,35 @@ tl;dr: Use one that fits your needs
 =head2 Using explicit get_handle for every request
 
 This benchmark assumes that you're fetching the lexicon anew for
-every request.
+every request. This allows you to switch languages for every request
 
-Benchmark run with Mac OS X (10.5.8) perl 5.8.9 (MacPorts)
+Benchmark run with Mac OS X (10.8.2) perl 5.16.1
 
   Running benchmarks with
-    Locale::Maketext: 1.19
-    Data::Localize:   0.00021
-                       Rate D::L(Namespace)   L::M D::L(Gettext+BDB) D::L(Gettext)
-  D::L(Namespace)    6818/s              --   -41%              -75%          -75%
-  L::M              11494/s             69%     --              -57%          -57%
-  D::L(Gettext+BDB) 27027/s            296%   135%                --            0%
-  D::L(Gettext)     27027/s            296%   135%                0%            --
+    Locale::Maketext: 1.23
+    Data::Localize:   0.00023
+                       Rate D::L(Namespace)   L::M D::L(Gettext) D::L(Gettext+BDB)
+  D::L(Namespace)    5051/s              --   -65%          -73%              -73%
+  L::M              14423/s            186%     --          -24%              -24%
+  D::L(Gettext)     18868/s            274%    31%            --               -1%
+  D::L(Gettext+BDB) 18987/s            276%    32%            1%                --
 
 =head2 Using cached lexicon objects for all
 
 This benchmark assumes that you're fetching the lexicon once for
-a particular language, and you keep it in memory for reuse
+a particular language, and you keep it in memory for reuse.
+This does NOT allow you to switch languages for every request.
+
+Benchmark run with Mac OS X (10.8.2) perl 5.16.1
 
   Running benchmarks with
-    Locale::Maketext: 1.19
-    Data::Localize:   0.00021
-                       Rate D::L(Namespace) D::L(Gettext+BDB) D::L(Gettext)   L::M
-  D::L(Namespace)    3636/s              --              -68%          -74%   -95%
-  D::L(Gettext+BDB) 11538/s            217%                --          -16%   -84%
-  D::L(Gettext)     13761/s            278%               19%            --   -81%
-  L::M              71429/s           1864%              519%          419%     --
+    Locale::Maketext: 1.23
+    Data::Localize:   0.00023
+                        Rate D::L(Namespace) D::L(Gettext+BDB) D::L(Gettext)  L::M
+  D::L(Namespace)     6023/s              --              -65%          -69%  -96%
+  D::L(Gettext+BDB)  17202/s            186%                --          -12%  -87%
+  D::L(Gettext)      19548/s            225%               14%            --  -86%
+  L::M              135993/s           2158%              691%          596%    --
 
 =head1 TODO
 
