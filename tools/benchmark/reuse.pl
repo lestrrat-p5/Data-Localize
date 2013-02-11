@@ -48,7 +48,7 @@ print "Running benchmarks with\n",
     "  Locale::Maketext: ", $Locale::Maketext::VERSION, "\n",
     "  Data::Localize:   ", $Data::Localize::VERSION, "\n",
 ;
-cmpthese(30_000, {
+cmpthese(-1, {
     'L::M' => sub {
         $handle->maketext('Hello, [_1]', 'John Doe');
     },
