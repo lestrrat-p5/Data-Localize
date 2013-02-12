@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.00023 Feb 12 2013
+  * Switch Any::Moose to Moo.
+  * Update benchmarks.
+  * Run tests on Travis CI
+
 0.00022 Nov 07 2011
   * Very small optimization.
   * Doc fixes on performance
