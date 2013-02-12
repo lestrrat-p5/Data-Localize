@@ -17,8 +17,10 @@ has _localizer => (
 );
 
 has formatter => (
-    is => 'lazy',
+    is => 'rw',
+    lazy => 1,
     isa => sub { $_[0]->isa('Data::Localize::Format') },
+    builder => "_build_formatter",
     required => 1,
     handles => { format_string => 'format' },
 );

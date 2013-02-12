@@ -2,7 +2,8 @@ package Data::Localize::Trait::WithStorage;
 use Moo::Role;
 
 has storage_class => (
-    is => 'lazy',
+    is => 'ro',
+    lazy => 1,
     default => sub {
         return '+Data::Localize::Storage::Hash';
     }

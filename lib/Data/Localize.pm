@@ -29,17 +29,23 @@ has auto => (
 );
 
 has auto_localizer => (
-    is => 'lazy',
+    is => 'rw',
+    lazy => 1,
+    builder => "_build_auto_localizer",
     isa => sub { $_[0]->isa('Data::Localize::Auto') },
 );
 
 has _languages => (
-    is => 'lazy',
+    is => 'rw',
+    lazy => 1,
+    builder => "_build__languages",
     init_arg => 'languages',
 );
 
 has _fallback_languages => (
-    is => 'lazy',
+    is => 'rw',
+    lazy => 1,
+    builder => "_build__fallback_languages",
     init_arg => 'languages',
 );
 

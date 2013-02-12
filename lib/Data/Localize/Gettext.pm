@@ -43,7 +43,9 @@ has keep_empty => (
 );
 
 has _parser => (
-    is => 'lazy',
+    is => 'rw',
+    lazy => 1,
+    builder => "_build__parser",
     isa => sub { $_[0]->isa('Data::Localize::Gettext::Parser') },
 );
 
