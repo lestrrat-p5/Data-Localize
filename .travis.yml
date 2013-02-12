@@ -3,4 +3,5 @@ perl:
   - "5.16"
   - "5.14"
   - "5.12"
-
+env:
+  - PERL_CPANM_OPT=-v
