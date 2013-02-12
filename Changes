@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00024 Feb 12 2013
+  * Fix usage of is => 'lazy' into is => 'rw', lazy => 1, and builder => ...
+
 0.00023 Feb 12 2013
   * Switch Any::Moose to Moo.
   * Update benchmarks.
