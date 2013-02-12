@@ -55,7 +55,6 @@ has _localizers => (
             if (Scalar::Util::blessed($args)) {
                 next;
             }
-diag explain $args;
 
             my $klass = delete $args->{class};
             if (! $klass) {
