@@ -4,5 +4,4 @@ perl:
   - "5.14"
   - "5.12"
 before_install: cpanm --quiet --notest Module::Install::Repository Module::Install::AuthorTests
-env:
-  - PERL_CPANM_OPT=-v
+
