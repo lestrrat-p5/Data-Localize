@@ -3,7 +3,6 @@ use Moo;
 use Module::Pluggable::Object;
 use Encode ();
 use Data::Localize;
-use Data::Localize::Util qw(_alias_and_deprecate);
 
 BEGIN {
     if (Data::Localize::DEBUG) {
@@ -54,8 +53,6 @@ around register => sub {
     }   
     $loc->add_localizer_map('*', $self);
 };
-
-_alias_and_deprecate lexicon_get => 'get_lexicon';
 
 sub add_namespaces {
     my $self = shift;

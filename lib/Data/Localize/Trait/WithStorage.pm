@@ -1,6 +1,5 @@
 package Data::Localize::Trait::WithStorage;
 use Moo::Role;
-use Data::Localize::Util qw(_alias_and_deprecate);
 
 has storage_class => (
     is => 'lazy',
@@ -108,12 +107,6 @@ sub _canonicalize_storage_class {
     }
     $class;
 }
-
-_alias_and_deprecate lexicon_get => 'get_lexicon';
-_alias_and_deprecate lexicon_set => 'set_lexicon';
-_alias_and_deprecate lexicon_map_get => 'get_lexicon_map';
-_alias_and_deprecate lexicon_map_set => 'set_lexicon_map';
-_alias_and_deprecate lexicon_merge => 'merge_lexicon';
 
 1;
 

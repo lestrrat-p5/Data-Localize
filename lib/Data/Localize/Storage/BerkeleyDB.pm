@@ -15,7 +15,6 @@ has '_db' => (
 
 has 'store_as_refs' => (
     is      => 'ro',
-    isa     => 'Bool',
     default => sub { 0 },
 );
 

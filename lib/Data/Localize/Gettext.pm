@@ -7,7 +7,6 @@ use Carp ();
 use Data::Localize::Gettext::Parser;
 use File::Temp ();
 use Data::Localize;
-use Data::Localize::Util qw(_alias_and_deprecate);
 use Data::Localize::Storage::Hash;
 
 BEGIN {
@@ -118,8 +117,6 @@ sub load_from_file {
     # This needs to be merged
     $self->merge_lexicon($lang, $lexicon);
 }
-
-_alias_and_deprecate path_add => 'add_path';
 
 1;
 
