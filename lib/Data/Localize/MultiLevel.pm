@@ -2,6 +2,7 @@ package Data::Localize::MultiLevel;
 use Moo;
 use Config::Any;
 use Data::Localize;
+use MooX::Types::MooseLike::Base qw(ArrayRef);
 BEGIN {
     if (Data::Localize::DEBUG) {
         require Data::Localize::Log;
@@ -14,7 +15,7 @@ with 'Data::Localize::Trait::WithStorage';
 
 has paths => (
     is => 'ro',
-    isa => 'ArrayRef',
+    isa => ArrayRef,
     trigger => sub {
         my $self = shift;
         $self->load_from_path($_) for @{$_[0]};

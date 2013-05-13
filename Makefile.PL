@@ -5,6 +5,7 @@ name('Data-Localize');
 all_from('lib/Data/Localize.pm');
 
 requires 'Moo' => '1.000008';
+requires 'MooX::Types::MooseLike::Base';
 requires 'Encode';
 requires 'I18N::LangTags';
 requires 'I18N::LangTags::Detect';
