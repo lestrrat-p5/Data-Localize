@@ -5,7 +5,13 @@ use Carp ();
 use Encode ();
 use File::Spec ();
 use File::Temp ();
-
+use Data::Localize ();
+BEGIN {
+    if (Data::Localize::DEBUG) {
+        require Data::Localize::Log;
+        Data::Localize::Log->import;
+    }
+}
 with 'Data::Localize::Storage';
 
 has '_db' => (
@@ -35,6 +41,10 @@ sub BUILD {
             -Flags    => BerkeleyDB::DB_CREATE(),
         };
 
+        if (Data::Localize::DEBUG) {
+            local $Log::Minimal::AUTODUMP = 1;
+            debugf("Storage::BerkeleyDB Automatically building storage db with class = %s, args = %s", $class, $args->{bdb_args});
+        }
         $self->_db( $class->new( $args->{bdb_args} || {} ) ||
             Carp::confess("Failed to create $class: $BerkeleyDB::Error")
         );
@@ -69,6 +79,10 @@ sub get {
 
 sub set {
     my ($self, $key, $value, $flags) = @_;
+
+    if (Data::Localize::DEBUG) {
+        debugf("Storage::BerkeleyDB: Set %s -> %s", $key, $value);
+    }
 
     if ( $self->store_as_refs ) {
         unless ( ref $value ) {

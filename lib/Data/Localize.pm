@@ -204,6 +204,7 @@ sub localize {
         }
         foreach my $localizer (@$localizers) {
             if (DEBUG) {
+                local $Log::Minimal::AUTODUMP = 1;
                 debugf("localize - Trying with %s", $localizer);
             }
             my $out = $localizer->localize_for(
