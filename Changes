@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00025 May 30 2013
+  * Various fixes for rt #83582
+
 0.00024 Feb 12 2013
   * Fix usage of is => 'lazy' into is => 'rw', lazy => 1, and builder => ...
 
