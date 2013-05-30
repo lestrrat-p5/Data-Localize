@@ -46,7 +46,7 @@ has _fallback_languages => (
     is => 'rw',
     lazy => 1,
     builder => "_build__fallback_languages",
-    init_arg => 'languages',
+    init_arg => 'fallback_languages',
 );
 
 has _localizers => (
@@ -85,6 +85,7 @@ has localizer_map => (
 
 sub BUILD {
     my $self = shift;
+
     if ($self->count_localizers > 0) {
         foreach my $loc (@{ $self->_localizers }) {
             $loc->register($self);
@@ -274,11 +275,16 @@ sub add_localizer {
         $localizer = $_[0];
     } else {
         my %args = @_;
+
         my $klass = delete $args{class};
         if ($klass !~ s/^\+//) {
             $klass = "Data::Localize::$klass";
         }
         Module::Load::load($klass);
+        if (Data::Localize::DEBUG) {
+            local $Log::Minimal::AUTODUMP = 1;
+            debugf("Creating localizer '%s' (%s)", $klass, \%args);
+        }
         $localizer = $klass->new(%args);
     }
 

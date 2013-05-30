@@ -1,9 +1,16 @@
 package Data::Localize::Trait::WithStorage;
 use Moo::Role;
+use Data::Localize;
+
+BEGIN {
+    if (Data::Localize::DEBUG) {
+        require Data::Localize::Log;
+        Data::Localize::Log->import;
+    }
+}
 
 has storage_class => (
     is => 'ro',
-    lazy => 1,
     default => sub {
         return '+Data::Localize::Storage::Hash';
     }
@@ -24,25 +31,35 @@ has lexicon_map => (
     default => sub { +{} },
 );
 
-sub BUILD {}
-after 'BUILD' => sub {
+after BUILD => sub {
     my $self = shift;
-    if ( my $langs = $self->load_from_storage ) {
-        my $storage_class = $self->_canonicalize_storage_class;
-        my $storage_args  = $self->storage_args;
 
-        Module::Load::load( $storage_class );
+    my $langs = $self->load_from_storage;
+    if (! $langs || ! @$langs) {
+        if (Data::Localize::DEBUG) {
+            debugf("No languages to load");
+        }
+        return;
+    }
+    my $storage_class = $self->_canonicalize_storage_class;
+    my $storage_args  = $self->storage_args;
+    if (Data::Localize::DEBUG) {
+        debugf("Building lexicon map (%s)", $storage_class);
+    }
 
-        unless ( $storage_class->is_volatile ) {
-            foreach my $lang ( @$langs ) {
+    Module::Load::load( $storage_class );
 
-                $storage_args->{lang} = $lang;
-
-                $self->set_lexicon_map(
-                    $lang,
-                    $storage_class->new( $storage_args )
-                );
+    unless ( $storage_class->is_volatile ) {
+        foreach my $lang ( @$langs ) {
+            if (Data::Localize::DEBUG) {
+                debugf("Loading storage for lang '%s'", $lang);
             }
+            $storage_args->{lang} = $lang;
+
+            $self->set_lexicon_map(
+                $lang,
+                $storage_class->new( $storage_args )
+            );
         }
     }
 };
@@ -77,12 +94,18 @@ sub set_lexicon {
 sub merge_lexicon {
     my ($self, $lang, $new_lexicon) = @_;
 
+    if (Data::Localize::DEBUG) {
+        debugf("Merging lexicon for lang '%s'", $lang);
+    }
     my $lexicon = $self->get_lexicon_map($lang);
     if (! $lexicon) {
         $lexicon = $self->_build_storage($lang);
         $self->set_lexicon_map($lang, $lexicon);
     }
     while (my ($key, $value) = each %$new_lexicon) {
+        if (Data::Localize::DEBUG) {
+            debugf("Setting lexicon '%s' on '%s'", $key, Scalar::Util::blessed $lexicon);
+        }
         $lexicon->set($key, $value);
     }
 }
@@ -97,6 +120,9 @@ sub _build_storage {
 
     $args->{lang} = $lang;
 
+    if (Data::Localize::DEBUG) {
+        debugf("Creating storage '%s'", $class);
+    }
     return $class->new( $args );
 }
 
@@ -108,6 +134,8 @@ sub _canonicalize_storage_class {
     }
     $class;
 }
+
+no Moo::Role;
 
 1;
 

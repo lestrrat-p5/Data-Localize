@@ -18,9 +18,19 @@ has paths => (
     isa => ArrayRef,
     trigger => sub {
         my $self = shift;
-        $self->load_from_path($_) for @{$_[0]};
+        if ($self->initialized) {
+            $self->load_from_path($_) for @{$_[0]};
+        }
     },
 );
+
+after BUILD => sub {
+    my $self = shift;
+    my $paths = $self->paths;
+    foreach my $path (@$paths) {
+        $self->load_from_path($path);
+    }
+};
 
 after register => sub {
     my ($self, $loc) = @_;

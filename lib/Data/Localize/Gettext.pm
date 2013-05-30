@@ -1,4 +1,3 @@
-
 package Data::Localize::Gettext;
 use utf8;
 use Moo;
@@ -28,7 +27,9 @@ has paths => (
     is => 'ro',
     trigger => sub {
         my $self = shift;
-        $self->load_from_path($_) for @{$_[0]};
+        if ($self->initialized) {
+            $self->load_from_path($_) for @{$_[0]};
+        }
     },
 );
 
@@ -63,6 +64,14 @@ sub _build__parser {
         encoding   => $self->encoding(),
     );
 }
+
+after BUILD => sub {
+    my $self = shift;
+    my $paths = $self->paths;
+    foreach my $path (@$paths) {
+        $self->load_from_path($path);
+    }
+};
 
 sub BUILDARGS {
     my ($class, %args) = @_;

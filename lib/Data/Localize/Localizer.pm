@@ -1,9 +1,10 @@
-
 package Data::Localize::Localizer;
 use utf8;
 use Moo;
 use Carp ();
 use Data::Localize;
+use Encode ();
+
 BEGIN {
     if (Data::Localize::DEBUG) {
         require Data::Localize::Log;
@@ -14,6 +15,12 @@ BEGIN {
 has _localizer => (
     is => 'rw',
     weak_ref => 1,
+);
+
+has initialized => (
+    is => 'rw',
+    default => 0,
+    init_arg => undef,
 );
 
 has formatter => (
@@ -28,6 +35,10 @@ has formatter => (
 sub _build_formatter {
     Module::Load::load('Data::Localize::Format::Maketext');
     return Data::Localize::Format::Maketext->new();
+}
+
+sub BUILD {
+    $_[0]->initialized(1);
 }
 
 sub register {
