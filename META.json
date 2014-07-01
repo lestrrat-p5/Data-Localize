@@ -74,7 +74,8 @@
       },
       "homepage" : "https://github.com/lestrrat/Data-Localize",
       "repository" : {
-         "url" : "https://github.com/lestrrat/Data-Localize",
+         "type" : "git",
+         "url" : "git://github.com/lestrrat/Data-Localize.git",
          "web" : "https://github.com/lestrrat/Data-Localize"
       }
    },
