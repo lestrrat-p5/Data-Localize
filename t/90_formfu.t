@@ -1,7 +1,14 @@
 use strict;
 use utf8;
-use Test::More tests => 1;
-use Test::Requires qw(HTML::FormFu CGI);
+use Test::More;
+BEGIN {
+    eval {
+        require HTML::FormFu;
+    };
+    if ($@) {
+        plan(skip_all => "This test requires HTML::FormFu");
+    }
+}
 use Data::Localize;
 
 
@@ -47,3 +54,5 @@ $formfu->submitted_and_valid;
 
 my $output = $formfu->render;
 like($output, qr/必須項目/, "error message is properly localized");
+
+done_testing;
