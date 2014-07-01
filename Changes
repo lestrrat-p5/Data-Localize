@@ -1,6 +1,10 @@
 Changes
 =======
 
+{{$NEXT}}
+  * Work with perl 5.20 and up (Karl Williamson)
+  * Changed to use Minilla
+
 0.00025 May 30 2013
   * Various fixes for rt #83582
 
