@@ -193,4 +193,6 @@ formatter.
 
 =head2 load_from_path
 
+=head2 register
+
 =cut
