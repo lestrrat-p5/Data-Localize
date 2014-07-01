@@ -1,7 +1,15 @@
 use strict;
 use utf8;
-use Test::More tests => 15;
-use Test::Requires qw(BerkeleyDB YAML::XS);
+use Test::More;
+BEGIN {
+    eval {
+        require BerkeleyDB;
+        require YAML::XS;
+    };
+    if ($@) {
+        plan(skip_all => "test requires YAML::XS and BerkeleyDB");
+    }
+}
 use t::Data::Localize::Test qw(write_po);
 
 use_ok "Data::Localize";
@@ -57,3 +65,5 @@ EOM
         is( $loc->localize( 'nonexistent.hello_world' ), 'nonexistent.hello_world' );
     }
 }
+
+done_testing;
