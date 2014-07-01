@@ -2,6 +2,8 @@ Changes
 =======
 
 {{$NEXT}}
+
+0.00026 2014-07-01T03:45:18Z
   * Work with perl 5.20 and up (Karl Williamson)
   * Changed to use Minilla
 

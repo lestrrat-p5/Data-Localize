@@ -4,9 +4,9 @@
       "Daisuke Maki C<< <daisuke@endeworks.jp> >>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v1.1.0, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Minilla/v1.1.0, CPAN::Meta::Converter version 2.141520",
    "license" : [
-      "unknown"
+      "mit"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -78,7 +78,7 @@
          "web" : "https://github.com/lestrrat/Data-Localize"
       }
    },
-   "version" : "0.00025",
+   "version" : "0.00026",
    "x_contributors" : [
       "Dave Rolsky <autarch@urth.org>",
       "makamaka <makamaka.donzoko@gmail.com>",
