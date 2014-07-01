@@ -1,7 +1,16 @@
 use strict;
 use utf8;
-use Test::More tests => 27;
-use Test::Requires qw(BerkeleyDB YAML::XS Config::Any);
+use Test::More;
+BEGIN {
+    eval {
+        require BerkeleyDB;
+        require Config::Any;
+        require YAML::XS;
+    };
+    if ($@) {
+        plan(skip_all => "test requires Config::Any, YAML::XS and BerkeleyDB");
+    }
+}
 use t::Data::Localize::Test qw(write_po);
 use File::Path;
 
@@ -108,3 +117,5 @@ use_ok "Data::Localize";
 }
 
 File::Path::remove_tree( $DB_DIR );
+
+done_testing;
