@@ -1,8 +1,16 @@
 
 use strict;
 use utf8;
-use Test::More tests => 13;
-use Test::Requires qw( YAML::XS Config::Any );
+use Test::More;
+BEGIN {
+    eval {
+        requires YAML::XS;
+        requires Config::Any;
+    };
+    if ($@) {
+        plan(skip_all => "Test requires YAML::XS and Config::Any");
+    }
+}
 
 use_ok "Data::Localize";
 
@@ -32,3 +40,4 @@ $loc->add_localizer(
     is( $loc->localize( 'nonexistent.hello_world' ), 'nonexistent.hello_world' );
 }
 
+done_testing;
