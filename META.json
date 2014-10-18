@@ -50,7 +50,8 @@
       "runtime" : {
          "recommends" : {
             "BerkeleyDB" : "0",
-            "Config::Any" : "0"
+            "Config::Any" : "0",
+            "YAML::XS" : "0"
          },
          "requires" : {
             "Encode" : "0",
@@ -73,11 +74,11 @@
       "homepage" : "https://github.com/lestrrat/Data-Localize",
       "repository" : {
          "type" : "git",
-         "url" : "ssh://git@github.com/lestrrat/Data-Localize.git",
+         "url" : "git://github.com/lestrrat/Data-Localize.git",
          "web" : "https://github.com/lestrrat/Data-Localize"
       }
    },
-   "version" : "0.00026",
+   "version" : "0.00027",
    "x_contributors" : [
       "Dave Rolsky <autarch@urth.org>",
       "makamaka <makamaka.donzoko@gmail.com>",
