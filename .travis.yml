@@ -9,4 +9,5 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install libdb5.1-dev
   - cpanm --quiet --notest Module::Install::Repository Module::Install::AuthorTests
+  - cpanm --quiet --notest YAML::XS Config::Any BerkeleyDB HTML::FormFu
 
