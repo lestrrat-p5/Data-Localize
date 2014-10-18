@@ -2,11 +2,11 @@ use strict;
 use utf8;
 use Test::More;
 BEGIN {
-    eval {
-        require HTML::FormFu;
-    };
-    if ($@) {
-        plan(skip_all => "This test requires HTML::FormFu");
+    for my $module (qw(HTML::FormFu CGI)) {
+        eval "require $module";
+        if ($@) {
+            plan(skip_all => "This test requires $module");
+        }
     }
 }
 use Data::Localize;
