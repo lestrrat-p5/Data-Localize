@@ -2,12 +2,11 @@ use strict;
 use utf8;
 use Test::More;
 BEGIN {
-    eval {
-        require BerkeleyDB;
-        require YAML::XS;
-    };
-    if ($@) {
-        plan(skip_all => "test requires YAML::XS and BerkeleyDB");
+    for my $module (qw(BerkeleyDB YAML::XS Config::Any)) {
+        eval "require $module";
+        if ($@) {
+            plan(skip_all => "test requires $module");
+        }
     }
 }
 use t::Data::Localize::Test qw(write_po);
