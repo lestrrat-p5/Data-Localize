@@ -5,5 +5,7 @@ perl:
   - "5.16"
   - "5.14"
   - "5.12"
-before_install: cpanm --quiet --notest Module::Install::Repository Module::Install::AuthorTests
+before_install: 
+  - sudo apt-get install libdb5.3
+  - cpanm --quiet --notest Module::Install::Repository Module::Install::AuthorTests
 
