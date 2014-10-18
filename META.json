@@ -4,7 +4,7 @@
       "Daisuke Maki C<< <daisuke@endeworks.jp> >>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v1.1.0, CPAN::Meta::Converter version 2.141520",
+   "generated_by" : "Minilla/v2.1.3, CPAN::Meta::Converter version 2.142690",
    "license" : [
       "mit"
    ],
@@ -35,8 +35,6 @@
       },
       "configure" : {
          "requires" : {
-            "CPAN::Meta" : "0",
-            "CPAN::Meta::Prereqs" : "0",
             "Module::Build" : "0.38"
          }
       },
@@ -75,7 +73,7 @@
       "homepage" : "https://github.com/lestrrat/Data-Localize",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/lestrrat/Data-Localize.git",
+         "url" : "ssh://git@github.com/lestrrat/Data-Localize.git",
          "web" : "https://github.com/lestrrat/Data-Localize"
       }
    },
