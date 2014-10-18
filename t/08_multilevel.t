@@ -3,12 +3,11 @@ use strict;
 use utf8;
 use Test::More;
 BEGIN {
-    eval {
-        requires YAML::XS;
-        requires Config::Any;
-    };
-    if ($@) {
-        plan(skip_all => "Test requires YAML::XS and Config::Any");
+    foreach my $module (qw(YAML::XS Config::Any)) {
+        eval "require $module";
+        if ($@) {
+            plan(skip_all => "Test requires $module");
+        }
     }
 }
 
