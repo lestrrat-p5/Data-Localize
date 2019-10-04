@@ -1,13 +1,10 @@
 language: perl
 perl:
-  - "5.20"
-  - "5.18"
-  - "5.16"
-  - "5.14"
-  - "5.12"
+  - "5.30"
+  - "5.28"
 before_install: 
   - sudo apt-get update
-  - sudo apt-get install libdb5.1-dev
+  - sudo apt-get install libdb-dev
   - cpanm --quiet --notest Module::Install::Repository Module::Install::AuthorTests
   - cpanm --quiet --notest YAML::XS Config::Any BerkeleyDB HTML::FormFu
 
