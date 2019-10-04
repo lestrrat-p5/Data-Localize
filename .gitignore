@@ -5,5 +5,8 @@
 /Build.bat
 !Build/
 !META.json
+MYMETA.json
+MYMETA.yml
 !LICENSE
 /local
+/blib

@@ -80,12 +80,12 @@
    },
    "version" : "0.00028",
    "x_contributors" : [
-      "Daisuke Maki <lestrrat+github@gmail.com>",
       "Dave Rolsky <autarch@urth.org>",
       "Graham Knop <haarg@haarg.org>",
       "Karl Williamson <khw@cpan.org>",
       "Stevan Little <stevan.little@iinteractive.com>",
       "Thomas Mantl <tmantl@validad.net>",
+      "lestrrat <lestrrat+github@gmail.com>",
       "makamaka <makamaka.donzoko@gmail.com>"
    ],
    "x_serialization_backend" : "JSON::PP version 4.02",
